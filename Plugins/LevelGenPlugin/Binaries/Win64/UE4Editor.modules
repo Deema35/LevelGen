@@ -1,0 +1,8 @@
+{
+	"BuildId": "3944462",
+	"Modules": 
+	{
+		"LevelGenPluginEditor": "UE4Editor-LevelGenPluginEditor.dll",
+		"LevelGenPluginRuntime": "UE4Editor-LevelGenPluginRuntime.dll"
+	}
+}
