@@ -1,0 +1,35 @@
+{
+	"FileVersion": 3,
+	"Version": 48,
+	"VersionName": "1.0",
+	"FriendlyName": "LevelGenPlugin",
+	"Description": "Syty generator",
+	"Category": "Gamplay",
+	"CreatedBy": "Deema 35",
+	"CreatedByURL": " ",
+	"DocsURL": "",
+	"MarketplaceURL": " ",
+	"SupportURL": "",
+	"EnabledByDefault": true,
+	"CanContainContent": false,
+	"IsBetaVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "LevelGenPluginRuntime",
+			"Type": "Runtime",
+			"LoadingPhase": "PreDefault"
+		},
+		{
+			"Name": "LevelGenPluginEditor",
+			"Type": "Editor",
+			"LoadingPhase": "Default"
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "ProceduralMeshComponent",
+			"Enabled": true
+		}
+	]
+}
