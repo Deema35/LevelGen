@@ -97,7 +97,7 @@ void FProceduralFigureBase::Merge(FProceduralFigureBase& Figure, FVector Relatev
 	TArray<FVector> VerticesBuf;
 	TArray<FVector> NormalBuf;
 	TArray<FVector> TangentBuf;
-	TArray<int32> TrianglesBuf;
+	TArray<uint32> TrianglesBuf;
 
 	Figure.GetVertices(VerticesBuf);
 	Figure.GetNormals(NormalBuf);
@@ -152,18 +152,18 @@ void FProceduralFigureBase::Merge(FProceduralFigureBase& Figure, FVector Relatev
 
 
 
-void FProceduralFigureBase::CreateUVCoordinateForNewTriangles(TArray<int32>& TrianglesBuf)
+void FProceduralFigureBase::CreateUVCoordinateForNewTriangles(TArray<uint32>& TrianglesBuf)
 {
 
 	for (int i = 0; i < 10; i++)
 	{
-		std::multimap<int, std::vector<int>> NewTriangles;
+		std::multimap<int, std::vector<uint32>> NewTriangles;
 
 		GetNewTrianglesWithOutUVCoordinateSystem(TrianglesBuf, NewTriangles);
 
 		if (NewTriangles.count(3) != 0)
 		{
-			std::pair<std::multimap<int, std::vector<int>>::iterator, std::multimap<int, std::vector<int>>::iterator> it = NewTriangles.equal_range(3);
+			std::pair<std::multimap<int, std::vector<uint32>>::iterator, std::multimap<int, std::vector<uint32>>::iterator> it = NewTriangles.equal_range(3);
 			const FProceduralVertex* BasePoint = VertexOrder[it.first->second[0]];
 
 			std::shared_ptr<FCoordinateSystem2D> Coord2DNew(new FCoordinateSystem2D(BasePoint->Coordinat, BasePoint->NotOwnUVCoordinate.second, BasePoint->Normal, BasePoint->Tangent));
@@ -175,7 +175,7 @@ void FProceduralFigureBase::CreateUVCoordinateForNewTriangles(TArray<int32>& Tri
 		}
 		else if (NewTriangles.count(2) != 0)
 		{
-			std::pair<std::multimap<int, std::vector<int>>::iterator, std::multimap<int, std::vector<int>>::iterator> it = NewTriangles.equal_range(2);
+			std::pair<std::multimap<int, std::vector<uint32>>::iterator, std::multimap<int, std::vector<uint32>>::iterator> it = NewTriangles.equal_range(2);
 			const FProceduralVertex* BasePoint = nullptr;
 
 
@@ -198,7 +198,7 @@ void FProceduralFigureBase::CreateUVCoordinateForNewTriangles(TArray<int32>& Tri
 		}
 		else if (NewTriangles.count(1) != 0)
 		{
-			std::pair<std::multimap<int, std::vector<int>>::iterator, std::multimap<int, std::vector<int>>::iterator> it = NewTriangles.equal_range(1);
+			std::pair<std::multimap<int, std::vector<uint32>>::iterator, std::multimap<int, std::vector<uint32>>::iterator> it = NewTriangles.equal_range(1);
 			const FProceduralVertex* BasePoint = nullptr;
 
 
@@ -221,7 +221,7 @@ void FProceduralFigureBase::CreateUVCoordinateForNewTriangles(TArray<int32>& Tri
 		}
 		else if (NewTriangles.count(0) != 0)
 		{
-			std::pair<std::multimap<int, std::vector<int>>::iterator, std::multimap<int, std::vector<int>>::iterator> it = NewTriangles.equal_range(0);
+			std::pair<std::multimap<int, std::vector<uint32>>::iterator, std::multimap<int, std::vector<uint32>>::iterator> it = NewTriangles.equal_range(0);
 
 			std::shared_ptr<FCoordinateSystem2D> Coord2DNew(new FCoordinateSystem2D(VertexOrder[it.first->second[0]]->Coordinat, VertexOrder[it.first->second[0]]->Normal, VertexOrder[it.first->second[0]]->Tangent));
 
@@ -241,7 +241,7 @@ void FProceduralFigureBase::CreateUVCoordinateForNewTriangles(TArray<int32>& Tri
 
 }
 
-void FProceduralFigureBase::GetNewTrianglesWithOutUVCoordinateSystem(const TArray<int32>& TrianglesBuf, std::multimap<int, std::vector<int>>& NewTriangles)
+void FProceduralFigureBase::GetNewTrianglesWithOutUVCoordinateSystem(const TArray<uint32>& TrianglesBuf, std::multimap<int, std::vector<uint32>>& NewTriangles)
 {
 	for (int i = 0; i < TrianglesBuf.Num() / 3; i++)  // Get num triangles in new figure
 	{
@@ -256,7 +256,7 @@ void FProceduralFigureBase::GetNewTrianglesWithOutUVCoordinateSystem(const TArra
 					VertexWithCoordinat++;
 				}
 			}
-			NewTriangles.insert(std::make_pair(VertexWithCoordinat, std::vector<int>{TrianglesBuf[i * 3], TrianglesBuf[i * 3 + 1], TrianglesBuf[i * 3 + 2]}));
+			NewTriangles.insert(std::make_pair(VertexWithCoordinat, std::vector<uint32>{TrianglesBuf[i * 3], TrianglesBuf[i * 3 + 1], TrianglesBuf[i * 3 + 2]}));
 
 		}
 
@@ -296,7 +296,7 @@ FCoordinateSystem2D* FProceduralFigureBase::GetCoord2DSysForPoint(FVector Point)
 	return  nullptr;
 }
 
-void FProceduralFigureBase::RefreshTrianglesWithNewCoordinateSystem(TArray<int32>& TrianglesBuf, FCoordinateSystem2D* CoordinateSystem)
+void FProceduralFigureBase::RefreshTrianglesWithNewCoordinateSystem(TArray<uint32>& TrianglesBuf, FCoordinateSystem2D* CoordinateSystem)
 {
 	for (int i = 0; i < TrianglesBuf.Num() / 3; i++)
 	{
@@ -313,21 +313,26 @@ void FProceduralFigureBase::RefreshTrianglesWithNewCoordinateSystem(TArray<int32
 	}
 
 }
-
-void FProceduralFigureBase::GetVertices(TArray<FVector>& _Vertices, TArray<FVector>& _Normals, TArray<FVector2D>& _UVCoordinate, TArray<FProcMeshTangent>& Tangents) const
+void FProceduralFigureBase::GetMeshSection(FProcMeshSection& Section) const
 {
-	_Vertices.Reserve(Vertices.size());
-	_Normals.Reserve(Vertices.size());
-	_UVCoordinate.Reserve(Vertices.size());
-	Tangents.Reserve(Vertices.size());
+	Section.ProcVertexBuffer.Reserve(Vertices.size());
+	
 
 	for (auto it = Vertices.begin(); it != Vertices.end(); it++)
 	{
-		_Vertices.Add(it->Coordinat);
-		_Normals.Add(it->Normal);
-		_UVCoordinate.Add(it->UVCoordinate.second * TextureCodfficent);
-		Tangents.Add(FProcMeshTangent(it->Tangent, false));
+		FProcMeshVertex NewVertex;
+
+		NewVertex.Position = it->Coordinat;
+		NewVertex.Normal = it->Normal;
+		NewVertex.UV0 = it->UVCoordinate.second * TextureCodfficent;
+		NewVertex.Tangent = FProcMeshTangent(it->Tangent, false);
+
+		Section.ProcVertexBuffer.Add(NewVertex);
+
+		Section.SectionLocalBox += NewVertex.Position;
 	}
+
+	GetTriangles(Section.ProcIndexBuffer);
 
 }
 
@@ -360,7 +365,7 @@ void FProceduralFigureBase::GetTangents(TArray<FVector>& Tangents) const
 	}
 }
 
-void FProceduralFigureBase::GetTriangles(TArray<int32>& _Triangles) const
+void FProceduralFigureBase::GetTriangles(TArray<uint32>& _Triangles) const
 {
 	_Triangles.Reserve(Triangles.size());
 

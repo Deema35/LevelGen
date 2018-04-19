@@ -126,22 +126,23 @@ bool FActorTaskCreateProceduralActor::Execute()
 			ProceduralMeshActor->SetCollision(Collision);
 			LevelBilderCell.CreatedMeshActors.push_back(ProceduralMeshActor);
 			MeshIT = FigureBufer.GetBuffer().begin();
+			MeshCount++;
 		}
 	}
-	
-	if (ProceduralMeshActor)
+	else
 	{
 		ProceduralMeshActor->AddMesh(MeshIT->second);
-		
+
 		MeshCount++;
 		MeshIT++;
 
-		if (MeshCount == FigureBufer.GetBuffer().size())
+		if (MeshCount == FigureBufer.GetBuffer().size() + 1)
 		{
 			return true;
 		}
+		
 	}
-
+	
 	return false;
 }
 

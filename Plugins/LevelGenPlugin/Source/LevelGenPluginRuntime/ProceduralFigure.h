@@ -7,6 +7,7 @@
 struct FProcMeshTangent;
 
 class FProceduralFigureBase;
+struct FProcMeshSection;
 
 class FProceduralFigurBuffer
 {
@@ -119,7 +120,8 @@ public:
 
 	void Merge(FProceduralFigureBase& Figure, FVector RelatevCoordinate = FVector(0, 0, 0));
 
-	void GetVertices(TArray<FVector>& Vertices, TArray<FVector>& Normals, TArray<FVector2D>& UVCoordinate, TArray<FProcMeshTangent>& Tangents) const;
+
+	void GetMeshSection(FProcMeshSection& Section) const;
 
 	void GetVertices(TArray<FVector>& Vertices) const;
 
@@ -127,7 +129,7 @@ public:
 
 	void GetTangents(TArray<FVector>& Tangents) const;
 
-	void GetTriangles(TArray<int32>& Triangles) const;
+	void GetTriangles(TArray<uint32>& Triangles) const;
 
 	void GetUVCoordinate(TArray<FVector2D>& UVCoordinate) const;
 
@@ -141,15 +143,15 @@ protected:
 
 	void AddTriangle(int Vertex_1, int Vertex_2, int Vertex_3);
 
-	void GetNewTrianglesWithOutUVCoordinateSystem(const TArray<int32>& TrianglesBuf, std::multimap<int, std::vector<int>>& NewTriangles);
+	void GetNewTrianglesWithOutUVCoordinateSystem(const TArray<uint32>& TrianglesBuf, std::multimap<int, std::vector<uint32>>& NewTriangles);
 
-	void CreateUVCoordinateForNewTriangles(TArray<int32>& TrianglesBuf);
+	void CreateUVCoordinateForNewTriangles(TArray<uint32>& TrianglesBuf);
 
 	FCoordinateSystem2D* GetCoord2DSysForPointAndNormal(FVector Point, FVector Normal);
 
 	FCoordinateSystem2D* GetCoord2DSysForPoint(FVector Point);
 
-	void RefreshTrianglesWithNewCoordinateSystem(TArray<int32>& TrianglesBuf, FCoordinateSystem2D* CoordinateSystem);
+	void RefreshTrianglesWithNewCoordinateSystem(TArray<uint32>& TrianglesBuf, FCoordinateSystem2D* CoordinateSystem);
 
 private:
 

@@ -19,15 +19,11 @@ void ULevelGenBordersShowComponentBace::DrawFigure(FProceduralFigureBase* Figure
 {
 
 
-	TArray<FVector> Vertices;
-	TArray<FVector2D> UVCoordinate;
-	TArray<int32> Triangles;
+	FProcMeshSection Section;
+	Figure->GetMeshSection(Section);
+	Section.bEnableCollision = false;
 
-	Figure->GetVertices(Vertices);
-	Figure->GetUVCoordinate(UVCoordinate);
-	Figure->GetTriangles(Triangles);
-
-	CreateMeshSection(ElementNumber, Vertices, Triangles, TArray<FVector>(), UVCoordinate, TArray<FColor>(), TArray<FProcMeshTangent>(), false);
+	SetProcMeshSection(ElementNumber, Section);
 
 	if (Figure->GetMaterial())
 	{

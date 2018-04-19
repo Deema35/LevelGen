@@ -38,24 +38,19 @@ void ALevelGenProceduralMeshActor::AddMesh(const FProceduralFigurBuffer& WallBuf
 
 void ALevelGenProceduralMeshActor::AddMesh(std::shared_ptr<FProceduralFigureBase> Mesh)
 {
-	TArray<FVector> Vertices;
-	TArray<FVector> Normals;
-	TArray<FVector2D> UVCoordinate;
-	TArray<int32> Triangles;
-	TArray<FProcMeshTangent> Tangents;
+	
+	FProcMeshSection Section;
 
+	Mesh->GetMeshSection(Section);
 
-	Mesh->GetVertices(Vertices, Normals, UVCoordinate, Tangents);
-	Mesh->GetTriangles(Triangles);
+	Section.bEnableCollision = Collision;
 
-	ProceduralMesh->CreateMeshSection(CurrentElement, Vertices, Triangles, Normals, UVCoordinate, TArray<FColor>(), Tangents, Collision);
+	ProceduralMesh->SetProcMeshSection(CurrentElement, Section);
 
 	if (Mesh->GetMaterial())
 	{
 		ProceduralMesh->SetMaterial(CurrentElement, const_cast<UMaterialInterface*>(Mesh->GetMaterial()));
 	}
-
-	
 
 	CurrentElement++;
 }
