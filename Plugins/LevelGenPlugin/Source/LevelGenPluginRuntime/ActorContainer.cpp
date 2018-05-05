@@ -181,6 +181,11 @@ FString UTowerActorContainer::GetPathName() const
 	return Tower->GetPathName(); 
 }
 
+UClass* UTowerActorContainer::GetActorClass() const
+{
+	return Tower;
+}
+
 //.....................................................
 //UBildingActorContainer
 //.....................................................
@@ -209,6 +214,11 @@ FString UBildingActorContainer::GetPathName() const
 	return Bilding->GetPathName();
 }
 
+UClass* UBildingActorContainer::GetActorClass() const
+{
+	return Bilding;
+}
+
 //.....................................................
 //UBildingActorContainer
 //.....................................................
@@ -226,4 +236,9 @@ AActor* UHoverCarActorContainer::GetActor() const
 FString UHoverCarActorContainer::GetPathName() const
 {
 	return HoverCar->GetPathName();
+}
+
+UClass* UHoverCarActorContainer::GetActorClass() const
+{
+	return HoverCar;
 }

@@ -15,6 +15,7 @@ class UTowerStorage;
 struct FEdGraphSchemaAction;
 enum class ELevelGenActorType : uint8;
 class UActorsStorageBase;
+class SCustomEditorViewport;
 
 struct FCustomEditorTabs
 {
@@ -55,11 +56,15 @@ protected:
 
 	void RefreshActionMenuName();
 
+	void RebildPreviewViewPort(UClass* ActorClass);
+
 protected:
 
 	TSharedPtr<SGraphActionMenu> GraphActionMenu;
 
 	TSharedPtr<IDetailsView> PropertyEditor;
+
+	TSharedPtr<SCustomEditorViewport> PreviewViewport;
 
 	TSharedPtr<SSearchBox> FilterBox;
 
@@ -68,6 +73,10 @@ protected:
 	std::vector<ELevelGenActorType> AssetActorTyps;
 
 	UActorsStorageBase * EditedObject = nullptr;
+
+	TSharedPtr<SVerticalBox> ViewportContainer;
+
+	TSharedPtr<SDockTab> ViewPortSpawnedTab;
 
 private:
 	TSharedRef<class SGraphActionMenu> CreateActionMenuWidget();
@@ -104,9 +113,9 @@ private:
 
 	void AddToolbarExtension(FToolBarBuilder &builder);
 
-	
-
 	virtual void DeleteBlankConteyners() = 0;
+
+	void RefreshViewPortContainer();
 
 };
 

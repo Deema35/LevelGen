@@ -23,10 +23,12 @@
 #include "ActorContainer.h"
 #include "HoverCars/HoverCarStorage.h"
 #include "AssetCommands_RoomStorage.h"
+#include "SCustomEditorViewport.h"
 
 const FName FCustomEditorTabs::DetailsID(TEXT("Details"));
 const FName FCustomEditorTabs::ActionMenuID(TEXT("ActionMenu"));
 const FName RoomEditorAppName = FName(TEXT("RoomEditorApp"));
+
 
 //*************************************************
 //FActorStorage_AssetEditorBase
@@ -56,6 +58,7 @@ void FActorStorage_AssetEditorBase::InitAssetEditor_RoomStorage(const EToolkitMo
 
 	GraphActionMenu = CreateActionMenuWidget();
 
+	PreviewViewport = SNew(SCustomEditorViewport);
 
 
 	const TSharedRef<FTabManager::FLayout> StandaloneDefaultLayout = FTabManager::NewLayout("CustomEditor_Layout")
@@ -75,6 +78,7 @@ void FActorStorage_AssetEditorBase::InitAssetEditor_RoomStorage(const EToolkitMo
 				FTabManager::NewSplitter()
 				->SetOrientation(Orient_Horizontal)
 				->SetSizeCoefficient(0.2f)
+				
 				->Split
 				(
 
@@ -129,6 +133,7 @@ void FActorStorage_AssetEditorBase::RegisterTabSpawners(const TSharedRef<class F
 
 TSharedRef<SDockTab> FActorStorage_AssetEditorBase::SpawnTab_ActionMenu(const FSpawnTabArgs& Args)
 {
+	
 	return SNew(SDockTab)
 		.Label(FText::FromString("SGAction Menu"))
 		.TabColorScale(GetTabColorScale())
@@ -136,18 +141,21 @@ TSharedRef<SDockTab> FActorStorage_AssetEditorBase::SpawnTab_ActionMenu(const FS
 			SNew(SVerticalBox)
 
 			+ SVerticalBox::Slot()
-		.AutoHeight()
-		.VAlign(VAlign_Center)
-		[
-			FilterBox.ToSharedRef()
-		]
+			.AutoHeight()
+			.VAlign(VAlign_Center)
+			[
+				FilterBox.ToSharedRef()
+			]
 
-	+ SVerticalBox::Slot()
-		.AutoHeight()
-		.VAlign(VAlign_Center)
-		[
-			GraphActionMenu.ToSharedRef()
-		]
+			+ SVerticalBox::Slot()
+			.AutoHeight()
+			.VAlign(VAlign_Center)
+			[
+				
+				GraphActionMenu.ToSharedRef()
+				
+				
+			]
 
 
 		];
@@ -162,11 +170,18 @@ TSharedRef<SDockTab> FActorStorage_AssetEditorBase::SpawnTab_Details(const FSpaw
 	PropertyEditor = PropertyEditorRef;
 	PropertyEditor->OnFinishedChangingProperties().AddSP(this, &FActorStorage_AssetEditorBase::OnPropertiesChanging);
 
-	return SNew(SDockTab)
+	ViewPortSpawnedTab = SNew(SDockTab)
 		.Label(FText::FromString("Details"))
 		[
-			PropertyEditorRef
+			SAssignNew(ViewportContainer, SVerticalBox)
+	
 		];
+
+	RefreshViewPortContainer();
+
+	PreviewViewport->SetParentTab(ViewPortSpawnedTab);
+	
+	return ViewPortSpawnedTab.ToSharedRef();
 }
 
 void FActorStorage_AssetEditorBase::UnregisterTabSpawners(const TSharedRef<class FTabManager>& TabManager)
@@ -216,6 +231,7 @@ TSharedRef<SGraphActionMenu> FActorStorage_AssetEditorBase::CreateActionMenuWidg
 
 	// create the main action list piece of this widget
 	TSharedRef<SGraphActionMenu> _GraphActionMenu = SNew(SGraphActionMenu, false)
+		
 		.OnGetFilterText(this, &FActorStorage_AssetEditorBase::GetFilterText)
 		.OnCreateWidgetForAction(this, &FActorStorage_AssetEditorBase::OnCreateWidgetForAction)
 		.OnCollectAllActions(this, &FActorStorage_AssetEditorBase::OnCollectAllActions)
@@ -264,6 +280,9 @@ void FActorStorage_AssetEditorBase::OnActionSelected(const TArray< TSharedPtr<FE
 			ULevelGenActorContainerBase* ActorContainer = ((FRoomStorage_EdGraphSchemaAction*)InActions[0].Get())->RoomActorContainer;
 			CurrentSelectedActionMenuObject = ActorContainer;
 			PropertyEditor->SetObject(ActorContainer);
+			
+			RebildPreviewViewPort(ActorContainer->GetActorClass());
+			
 		}
 	}
 }
@@ -354,6 +373,39 @@ void FActorStorage_AssetEditorBase::RefreshActionMenuName()
 	}
 }
 
+void FActorStorage_AssetEditorBase::RebildPreviewViewPort(UClass* ActorClass)
+{
+	if (!PreviewViewport->GetIsViewPortValid())
+	{
+		PreviewViewport = SNew(SCustomEditorViewport);
+
+		RefreshViewPortContainer();
+
+		PreviewViewport->SetParentTab(ViewPortSpawnedTab);
+	}
+	
+	PreviewViewport->RebildScen(ActorClass);
+}
+
+void FActorStorage_AssetEditorBase::RefreshViewPortContainer()
+{
+	ViewportContainer->ClearChildren();
+	ViewportContainer->AddSlot()
+		[
+			PreviewViewport.ToSharedRef()
+		];
+
+	ViewportContainer->AddSlot()
+		.FillHeight(0.75)
+		.VAlign(VAlign_Top)
+
+		[
+			PropertyEditor.ToSharedRef()
+		];
+
+	
+}
+
 
 
 
@@ -412,6 +464,7 @@ void FRoomStorage_AssetEditor::DeleteActorContainer()
 		GraphActionMenu->RefreshAllActions(true);
 		EditedObject->Modify();
 		PropertyEditor->SetObject(nullptr);
+		RebildPreviewViewPort(nullptr);
 	}
 }
 
@@ -508,23 +561,25 @@ void FRoomStorage_AssetEditor::OnPropertiesChanging(const FPropertyChangedEvent&
 	else if (PropertyName == GET_MEMBER_NAME_CHECKED(URoomActorContainerRoomNode, LevelRoom))
 	{
 		RefreshActionMenuName();
-
+		GraphActionMenu->RefreshAllActions(true);
 	}
 	else if (PropertyName == GET_MEMBER_NAME_CHECKED(URoomActorContainerRoomLink, LevelLink))
 	{
 		RefreshActionMenuName();
-
+		GraphActionMenu->RefreshAllActions(true);
 	}
 	else if (PropertyName == GET_MEMBER_NAME_CHECKED(URoomActorContainerRoadLink, RoadLink))
 	{
 		RefreshActionMenuName();
+		GraphActionMenu->RefreshAllActions(true);
 	}
 	else if (PropertyName == GET_MEMBER_NAME_CHECKED(URoomActorContainerTerraceLink, TerrasLink))
 	{
 		RefreshActionMenuName();
+		GraphActionMenu->RefreshAllActions(true);
 	}
 
-	GraphActionMenu->RefreshAllActions(true);
+	
 
 	EditedObject->Modify();
 
@@ -616,6 +671,7 @@ void FTowerStorage_AssetEditor::DeleteActorContainer()
 		GraphActionMenu->RefreshAllActions(true);
 		EditedObject->Modify();
 		PropertyEditor->SetObject(nullptr);
+		RebildPreviewViewPort(nullptr);
 	}
 }
 
@@ -684,15 +740,15 @@ void FTowerStorage_AssetEditor::OnPropertiesChanging(const FPropertyChangedEvent
 	else if (PropertyName == GET_MEMBER_NAME_CHECKED(UTowerActorContainer, Tower))
 	{
 		RefreshActionMenuName();
-
+		GraphActionMenu->RefreshAllActions(true);
 	}
 	else if (PropertyName == GET_MEMBER_NAME_CHECKED(UBildingActorContainer, Bilding))
 	{
 		RefreshActionMenuName();
-
+		GraphActionMenu->RefreshAllActions(true);
 	}
 
-	GraphActionMenu->RefreshAllActions(true);
+	
 
 	EditedObject->Modify();
 
@@ -753,6 +809,7 @@ void FHoverCarStorage_AssetEditor::DeleteActorContainer()
 		GraphActionMenu->RefreshAllActions(true);
 		EditedObject->Modify();
 		PropertyEditor->SetObject(nullptr);
+		RebildPreviewViewPort(nullptr);
 	}
 }
 
@@ -800,10 +857,11 @@ void FHoverCarStorage_AssetEditor::OnPropertiesChanging(const FPropertyChangedEv
 	else if (PropertyName == GET_MEMBER_NAME_CHECKED(UHoverCarActorContainer, HoverCar))
 	{
 		RefreshActionMenuName();
+		GraphActionMenu->RefreshAllActions(true);
 	}
 	
 
-	GraphActionMenu->RefreshAllActions(true);
+	
 
 	EditedObject->Modify();
 

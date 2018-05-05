@@ -46,6 +46,8 @@ public:
 
 	virtual FVector GetSize() const { return FVector::ZeroVector; }
 
+	virtual UClass* GetActorClass() const { throw; }
+
 	virtual AActor* GetActor() const { throw; }
 
 	virtual FString GetPathName() const { throw; }
@@ -65,6 +67,8 @@ public:
 
 	virtual FVector GetSize() const override;
 
+	virtual UClass* GetActorClass() const override { return LevelRoom; }
+
 	virtual AActor* GetActor() const override;
 
 	virtual FString GetPathName() const override;
@@ -81,6 +85,8 @@ public:
 	virtual ELevelGenActorType GetType() const override { return ELevelGenActorType::GroundLinkRoom; }
 
 	virtual FVector GetSize() const override;
+
+	virtual UClass* GetActorClass() const override { return LevelLink; }
 
 	virtual AActor* GetActor() const override;
 
@@ -99,6 +105,8 @@ public:
 
 	virtual FVector GetSize() const override;
 
+	virtual UClass* GetActorClass() const override { return RoadLink; }
+
 	virtual AActor* GetActor() const override;
 
 	virtual FString GetPathName() const override;
@@ -115,6 +123,8 @@ public:
 	virtual ELevelGenActorType GetType() const override { return ELevelGenActorType::TerraceLinkRoom; }
 
 	virtual FVector GetSize() const override;
+
+	virtual UClass* GetActorClass() const override { return TerrasLink; }
 
 	virtual AActor* GetActor() const override;
 
@@ -133,6 +143,8 @@ public:
 
 	virtual FVector GetSize() const override;
 
+	virtual UClass* GetActorClass() const override;
+
 	virtual AActor* GetActor() const;
 
 	virtual FString GetPathName() const override;
@@ -150,6 +162,8 @@ public:
 
 	virtual FVector GetSize() const override;
 
+	virtual UClass* GetActorClass() const override;
+
 	virtual AActor* GetActor() const override;
 
 	virtual FString GetPathName() const override;
@@ -164,6 +178,8 @@ public:
 		TSubclassOf<AHoverCarActor> HoverCar;
 
 	virtual ELevelGenActorType GetType() const override { return ELevelGenActorType::HoverCar; }
+
+	virtual UClass* GetActorClass() const override;
 
 	virtual AActor* GetActor() const override;
 
