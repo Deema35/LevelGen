@@ -1,7 +1,8 @@
 // Copyright 2018 Pavlov Dmitriy
 #include "ProceduralFigure.h"
-#include "LevelGeneratorSettings.h"
 #include "ProceduralMeshComponent.h"
+#include "LevelGenProceduralMeshComponent.h"
+#include "LevelGeneratorSettings.h"
 
 //.........................................
 //FProceduralFigurBuffer
@@ -316,7 +317,7 @@ void FProceduralFigureBase::RefreshTrianglesWithNewCoordinateSystem(TArray<uint3
 void FProceduralFigureBase::GetMeshSection(FProcMeshSection& Section) const
 {
 	Section.ProcVertexBuffer.Reserve(Vertices.size());
-	
+
 
 	for (auto it = Vertices.begin(); it != Vertices.end(); it++)
 	{
@@ -332,8 +333,47 @@ void FProceduralFigureBase::GetMeshSection(FProcMeshSection& Section) const
 		Section.SectionLocalBox += NewVertex.Position;
 	}
 
+	Section.bEnableCollision = GetCollision();
+
 	GetTriangles(Section.ProcIndexBuffer);
 
+}
+
+void FProceduralFigureBase::GetLevelGenMeshSection(FLevelGenProcMeshSection& Section) const
+{
+	Section.ProcVertexBuffer.Reserve(Vertices.size());
+	
+
+	for (auto it = Vertices.begin(); it != Vertices.end(); it++)
+	{
+		FLevelGenProcMeshVertex NewVertex;
+
+		NewVertex.Position = it->Coordinat;
+		NewVertex.Normal = it->Normal;
+		NewVertex.UV0 = it->UVCoordinate.second * TextureCodfficent;
+		NewVertex.Tangent = it->Tangent;
+
+		Section.ProcVertexBuffer.Add(NewVertex);
+
+		Section.SectionLocalBox += NewVertex.Position;
+	}
+
+	Section.bEnableCollision = GetCollision();
+
+	GetTriangles(Section.ProcIndexBuffer);
+
+}
+
+FBox FProceduralFigureBase::GetLocalBox() const
+{
+	FBox NewBox;
+
+	for (auto it = Vertices.begin(); it != Vertices.end(); it++)
+	{
+		NewBox += it->Coordinat;
+		
+	}
+	return NewBox;
 }
 
 void FProceduralFigureBase::GetVertices(TArray<FVector>& _Vertices) const

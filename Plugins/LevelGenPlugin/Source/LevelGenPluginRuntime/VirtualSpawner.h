@@ -142,9 +142,6 @@ private:
 
 	ALevelGenProceduralMeshActor* ProceduralMeshActor = nullptr;
 
-	int MeshCount = 0;
-
-	std::map<const FLevelGeneratorMaterialSettings*, std::shared_ptr<FProceduralFigureBase>>::const_iterator MeshIT;
 };
 
 struct FActorTaskCreateBlueprintActor : public FActorTaskFLevelBilderCellBase

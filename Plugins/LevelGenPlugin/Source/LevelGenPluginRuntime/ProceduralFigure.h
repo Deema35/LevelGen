@@ -5,9 +5,9 @@
 #include <memory>
 #include "LevelGenCore.h"
 struct FProcMeshTangent;
-
-class FProceduralFigureBase;
 struct FProcMeshSection;
+class FProceduralFigureBase;
+struct FLevelGenProcMeshSection;
 
 class FProceduralFigurBuffer
 {
@@ -123,6 +123,8 @@ public:
 
 	void GetMeshSection(FProcMeshSection& Section) const;
 
+	void GetLevelGenMeshSection(FLevelGenProcMeshSection& Section) const;
+
 	void GetVertices(TArray<FVector>& Vertices) const;
 
 	void GetNormals(TArray<FVector>& Normals) const;
@@ -134,6 +136,22 @@ public:
 	void GetUVCoordinate(TArray<FVector2D>& UVCoordinate) const;
 
 	const UMaterialInterface* GetMaterial() const { return Material; }
+
+	FBox GetLocalBox() const;
+
+	void SetCollision(bool EnabelCollision) { Collision = EnabelCollision; }
+
+	bool GetCollision() const { return Collision; }
+
+	int GetTriangleNumber() const { return Triangles.size() / 3; }
+
+	int GetVertexNumber() const { return Vertices.size(); }
+
+	const std::set<FProceduralVertex>& GetVertices() const { return Vertices; }
+
+	float GetTextureCodfficent() const { return TextureCodfficent; }
+
+	virtual std::unique_ptr<FProceduralFigureBase> Clone() const  { return std::unique_ptr<FProceduralFigureBase>(new FProceduralFigureBase(*this)); }
 
 protected:
 
@@ -153,6 +171,8 @@ protected:
 
 	void RefreshTrianglesWithNewCoordinateSystem(TArray<uint32>& TrianglesBuf, FCoordinateSystem2D* CoordinateSystem);
 
+
+
 private:
 
 	UMaterialInterface * Material = nullptr;
@@ -167,6 +187,7 @@ private:
 
 	std::vector<std::shared_ptr<FCoordinateSystem2D>> Coord2D;
 
+	bool Collision = false;
 };
 
 
@@ -174,6 +195,8 @@ class FProceduralFigureTriangle : public FProceduralFigureBase
 {
 public:
 	FProceduralFigureTriangle(FVector Coordinate_1, FVector Coordinate_2, FVector Coordinate_3, FLevelGeneratorMaterialSettings Material, FVector Normal, FVector Tangent);
+
+	virtual std::unique_ptr<FProceduralFigureBase> Clone() const override { return std::unique_ptr<FProceduralFigureBase>(new FProceduralFigureTriangle(*this)); }
 
 };
 
@@ -184,4 +207,5 @@ public:
 
 	FProceduralFigureRectangle(FVector Point, FVector Normal, FVector i, FVector2D Size, FLevelGeneratorMaterialSettings Material);
 
+	virtual std::unique_ptr<FProceduralFigureBase> Clone() const override { return std::unique_ptr<FProceduralFigureBase>(new FProceduralFigureRectangle(*this)); }
 };

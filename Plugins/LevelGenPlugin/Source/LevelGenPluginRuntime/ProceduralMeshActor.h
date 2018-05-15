@@ -2,8 +2,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include <memory>
 #include "GameFramework/Actor.h"
-#include "ProceduralMeshComponent.h"
+#include "LevelGenProceduralMeshComponent.h"
 #include "ProceduralMeshActor.generated.h"
 
 class FProceduralFigureBase;
@@ -19,7 +20,7 @@ public:
 	
 	void AddMesh(const FProceduralFigurBuffer& WallBuffer);
 
-	void AddMesh(std::shared_ptr<FProceduralFigureBase> Mesh);
+	void AddMesh(const std::vector<std::shared_ptr<FProceduralFigureBase>>& Meshs);
 
 	void SetMaterial(int32 ElementIndex, UMaterialInterface* Material);
 
@@ -27,7 +28,7 @@ public:
 
 private:
 	UPROPERTY(VisibleAnywhere)
-		UProceduralMeshComponent * ProceduralMesh;
+		ULevelGenProceduralMeshComponent* ProceduralMesh;
 
 	int CurrentElement = 0;
 

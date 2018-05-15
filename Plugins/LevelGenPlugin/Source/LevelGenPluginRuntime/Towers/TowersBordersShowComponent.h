@@ -2,7 +2,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ProceduralMeshComponent.h"
 #include "LevelTowers.h"
 #include "Rooms/RoomBordersShowComponent.h"
 #include "TowersBordersShowComponent.generated.h"

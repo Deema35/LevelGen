@@ -118,32 +118,33 @@ bool FActorTaskCreateSplineMeshActor::Execute()
 
 bool FActorTaskCreateProceduralActor::Execute()
 {
-	if (MeshCount == 0)
+	if (!ProceduralMeshActor)
 	{
 		ProceduralMeshActor = ParentActor->GetWorld()->SpawnActor<ALevelGenProceduralMeshActor>(ALevelGenProceduralMeshActor::StaticClass(), Location, FRotator::ZeroRotator);
 		if (ProceduralMeshActor)
 		{
 			ProceduralMeshActor->SetCollision(Collision);
 			LevelBilderCell.CreatedMeshActors.push_back(ProceduralMeshActor);
-			MeshIT = FigureBufer.GetBuffer().begin();
-			MeshCount++;
+			
 		}
+		return false;
 	}
 	else
 	{
-		ProceduralMeshActor->AddMesh(MeshIT->second);
+		std::vector<std::shared_ptr<FProceduralFigureBase>> MeshBuffer;
 
-		MeshCount++;
-		MeshIT++;
-
-		if (MeshCount == FigureBufer.GetBuffer().size() + 1)
+		for (auto MeshIT = FigureBufer.GetBuffer().begin(); MeshIT != FigureBufer.GetBuffer().end(); MeshIT++)
 		{
-			return true;
+			MeshBuffer.push_back(MeshIT->second);
 		}
+		
+		ProceduralMeshActor->AddMesh(MeshBuffer);
+
+		return true;
 		
 	}
 	
-	return false;
+	
 }
 
 
