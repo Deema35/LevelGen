@@ -7,7 +7,8 @@
 const FValidationResult FValidationResult::Zero(0, 0);
 
 
-USearchGraph::USearchGraph(FJointPart& In, FJointPart& Out, const FDataStorage& _DataStorage, const ALevelGenerator& _LevelGenerator) : DataStorage(_DataStorage), LevelGenerator(_LevelGenerator)
+USearchGraph::USearchGraph(FJointPart& In, FJointPart& Out, FDataStorage& _DataStorage, const ALevelGenerator& _LevelGenerator) :
+	DataStorage(_DataStorage), LevelGenerator(_LevelGenerator)
 {
 	if (!DataStorage.LevelMap.IsCellExist(FVector2D(In.GetCoordinate())) || !DataStorage.LevelMap.GetCell(FVector2D(In.GetCoordinate()))->CellInst)
 	{
@@ -117,17 +118,6 @@ void USearchGraph::CreateNewSearchGraphNods(std::vector<std::pair<FValidationRes
 
 }
 
-void USearchGraph::GetRoomChain(std::vector<std::shared_ptr<FSearchGraphNode>>& RoomChain)
-{
-	auto it = Graph.find(FValidationResult::Zero);
-	std::shared_ptr<FSearchGraphNode> CurrentRoom = it->second;
-
-	while (CurrentRoom)
-	{
-		RoomChain.push_back(CurrentRoom);
-		CurrentRoom = CurrentRoom->LastNode.lock();
-	}
-}
 
 
 
@@ -220,4 +210,25 @@ FValidationResult USearchGraph::ValuationFunction(const FSearchGraphNode& Curren
 		}
 	}
 	return Result;
+}
+
+
+//.........................................
+//FLevelGraphLink
+//.............................................
+
+FLevelGraphLink::FLevelGraphLink(FJointPart& _In, FJointPart& _Out, FDataStorage& _DataStorage, const FLevelGeneratorSettings& _LevelSettings, const ALevelGenerator& _LevelGenerator)
+	: USearchGraph(_In, _Out, _DataStorage, _LevelGenerator), 
+	In(_In), Out(_Out), LevelSettings(_LevelSettings)
+{
+
+	auto it = Graph.find(FValidationResult::Zero);
+	std::shared_ptr<FSearchGraphNode> CurrentRoom = it->second;
+
+	while (CurrentRoom)
+	{
+		Rooms.push_back(std::shared_ptr<FPlacedLevelRoomLinkedToLevel>(new FPlacedLevelRoomLinkedToLevel(*CurrentRoom, CurrentRoom->GetStartCoordinate(), DataStorage)));
+		CurrentRoom = CurrentRoom->LastNode.lock();
+	}
+
 }

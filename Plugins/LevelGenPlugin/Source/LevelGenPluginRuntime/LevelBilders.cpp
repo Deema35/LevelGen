@@ -31,6 +31,7 @@
 #include "HoverCars/HoverCarStorage.h"
 #include "DataStorage.h"
 #include "HoverCars/HoverCar.h"
+#include "SearchGraph.h"
 
 static_assert(ELevelBilder::End == (ELevelBilder)6, "You must update CreateComponent after add new enum");
 

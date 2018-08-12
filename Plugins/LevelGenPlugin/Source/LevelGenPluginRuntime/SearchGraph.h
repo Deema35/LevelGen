@@ -26,11 +26,7 @@ struct FValidationResult
 class USearchGraph
 {
 public:
-	USearchGraph(FJointPart& In, FJointPart& Out, const FDataStorage& _DataStorage, const ALevelGenerator& _LevelGenerator);
-
-	void GetRoomChain(std::vector<std::shared_ptr<FSearchGraphNode>>& RoomChain);
-
-	
+	USearchGraph(FJointPart& In, FJointPart& Out, FDataStorage& _DataStorage, const ALevelGenerator& _LevelGenerator);
 
 private:
 	void CreateNewSearchGraphNods(std::vector<std::pair<FValidationResult, std::shared_ptr<FSearchGraphNode>>>& NewNods, FJointPart& InPortal, const FJointPart& OutPortal,
@@ -38,15 +34,33 @@ private:
 
 	bool IsSelfIntersectionPresent(std::shared_ptr<FSearchGraphNode> LastRoom);
 
-	
-
 	inline FValidationResult ValuationFunction(const FSearchGraphNode& CurrentNode, const FJointPart& SecondPart, FValidationResult LastValidationResult);
 
-private:
 
-	std::multimap<FValidationResult, std::shared_ptr<FSearchGraphNode>> Graph;
+protected:
 
 	const ALevelGenerator& LevelGenerator;
-	
-	const FDataStorage& DataStorage;
+
+	FDataStorage& DataStorage;
+
+	std::multimap<FValidationResult, std::shared_ptr<FSearchGraphNode>> Graph;
+};
+
+
+struct FLevelGraphLink : public USearchGraph
+{
+	FLevelGraphLink(FJointPart& _In, FJointPart& _Out, FDataStorage& _DataStorage, const FLevelGeneratorSettings& _LevelSettings, const ALevelGenerator& _LevelGenerator);
+
+public:
+
+	std::vector<std::shared_ptr<FPlacedLevelRoomLinkedToLevel>> Rooms;
+
+private:
+	FJointPart & In;
+
+	FJointPart& Out;
+
+	const FLevelGeneratorSettings& LevelSettings;
+
+
 };

@@ -103,7 +103,7 @@ private:
 
 
 UCLASS(hidecategories = (Object, LOD), meta = (BlueprintSpawnableComponent), ClassGroup = Rendering)
-class ULevelGenProceduralMeshComponent : public UMeshComponent, public IInterface_CollisionDataProvider
+class LEVELGENPLUGINRUNTIME_API ULevelGenProceduralMeshComponent : public UMeshComponent, public IInterface_CollisionDataProvider
 {
 	GENERATED_BODY()
 public:

@@ -13,24 +13,7 @@
 #include "SearchGraph.h"
 
 
-//.........................................
-//FLevelGraphLink
-//.............................................
 
-FLevelGraphLink::FLevelGraphLink(FJointPart& _In, FJointPart& _Out, FDataStorage& _DataStorage, const FLevelGeneratorSettings& _LevelSettings, const ALevelGenerator& _LevelGenerator)
-	: In(_In), Out(_Out), DataStorage(_DataStorage), LevelSettings(_LevelSettings), LevelGenerator(_LevelGenerator)
-{
-	std::shared_ptr<USearchGraph> SearchGraph = std::shared_ptr<USearchGraph>(new USearchGraph(In, Out, DataStorage, LevelGenerator));
-
-	std::vector<std::shared_ptr<FSearchGraphNode>>  RoomChain;
-
-	SearchGraph->GetRoomChain(RoomChain);
-	for (int i = 0; i < RoomChain.size(); i++)
-	{
-		Rooms.push_back(std::shared_ptr<FPlacedLevelRoomLinkedToLevel>(new FPlacedLevelRoomLinkedToLevel(*RoomChain[i], RoomChain[i]->GetStartCoordinate(), DataStorage)));
-	}
-	
-}
 
 //.........................................
 //FLevelGraphNodeBase

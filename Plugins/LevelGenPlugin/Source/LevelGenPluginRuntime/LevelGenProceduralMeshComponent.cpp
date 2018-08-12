@@ -24,7 +24,7 @@ static void ConvertProcMeshToDynMeshVertex(FDynamicMeshVertex& Vert, const FLeve
 	Vert.TextureCoordinate[0] = ProcVert.UV0;
 	Vert.TangentX = ProcVert.Tangent;
 	Vert.TangentZ = ProcVert.Normal;
-	Vert.TangentZ.Vector.W =  255;
+	Vert.TangentZ.Vector.W = 127;
 }
 
 FLevelGenProceduralMeshSceneProxy::FLevelGenProceduralMeshSceneProxy(ULevelGenProceduralMeshComponent* Component)

@@ -11,7 +11,7 @@ ULevelGenBordersShowComponentBace::ULevelGenBordersShowComponentBace()
 {
 	bHiddenInGame = true;
 	bUseEditorCompositing = true;
-	bGenerateOverlapEvents = false;
+	SetGenerateOverlapEvents(false);
 
 }
 

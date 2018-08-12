@@ -9,37 +9,17 @@
 #include <set> 
 
 
+
 struct FLevelCellBase;
 struct FLevelGeneratorSettings;
 class ALevelGenerator;
 struct FLevelGraphNodeRoom;
 struct FLevelGraphLinkRoom;
 class FPlacedLevelRoomLinkedToLevel;
-class USearchGraph;
 struct FJointPart;
 struct FLvevelLayer;
+struct FLevelGraphLink;
 
-struct FLevelGraphLink
-{
-	FLevelGraphLink(FJointPart& _In, FJointPart& _Out, FDataStorage& _DataStorage, const FLevelGeneratorSettings& _LevelSettings, const ALevelGenerator& _LevelGenerator);
-		
-public:
-
-	std::vector<std::shared_ptr<FPlacedLevelRoomLinkedToLevel>> Rooms;
-
-private:
-	FJointPart& In;
-
-	FJointPart& Out;
-
-	FDataStorage& DataStorage;
-
-	const FLevelGeneratorSettings& LevelSettings;
-
-	const ALevelGenerator& LevelGenerator;
-
-	
-};
 
 struct FLevelGraphNodeBase
 {
