@@ -231,4 +231,6 @@ FLevelGraphLink::FLevelGraphLink(FJointPart& _In, FJointPart& _Out, FDataStorage
 		CurrentRoom = CurrentRoom->LastNode.lock();
 	}
 
+	Graph.clear();
+
 }
