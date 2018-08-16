@@ -114,7 +114,7 @@ void FLevelBilderBase::CreateMesh(AVirtualSpawner* VirtualSpawner, FLevelBilderC
 	}
 	else
 	{
-		VirtualSpawner->AddTaskToQueue(std::shared_ptr<FActorTaskBase>(new FActorTaskCreateStaticMeshActor(LevelBilderCell, &ParentActor, Mesh, Location, Rotation, Scale, ActorTag, Collision, LevelSettings)));
+		VirtualSpawner->AddTaskToQueue(std::unique_ptr<FActorTaskBase>(new FActorTaskCreateStaticMeshActor(LevelBilderCell, &ParentActor, Mesh, Location, Rotation, Scale, ActorTag, Collision, LevelSettings)));
 	}
 
 	
@@ -164,7 +164,7 @@ void FLevelBilderBase::CreateMesh(AVirtualSpawner* VirtualSpawner, FLevelBilderC
 	}
 	else
 	{
-		VirtualSpawner->AddTaskToQueue(std::shared_ptr<FActorTaskBase>(new FActorTaskCreateSplineMeshActor(LevelBilderCell, &ParentActor, Mesh, ActorLoc, Points, Scale, ActorTag, Collision, LevelSettings)));
+		VirtualSpawner->AddTaskToQueue(std::unique_ptr<FActorTaskBase>(new FActorTaskCreateSplineMeshActor(LevelBilderCell, &ParentActor, Mesh, ActorLoc, Points, Scale, ActorTag, Collision, LevelSettings)));
 	}
 	
 	
@@ -196,7 +196,7 @@ void FLevelBilderBase::CreateProceduralActor(AVirtualSpawner* VirtualSpawner, FL
 	else
 	{
 
-		VirtualSpawner->AddTaskToQueue(std::shared_ptr<FActorTaskBase>(new FActorTaskCreateProceduralActor(LevelBilderCell, &ParentActor, FigureBufer, AbsLocation,  ActorTag, Collision, LevelSettings)));
+		VirtualSpawner->AddTaskToQueue(std::unique_ptr<FActorTaskBase>(new FActorTaskCreateProceduralActor(LevelBilderCell, &ParentActor, FigureBufer, AbsLocation,  ActorTag, Collision, LevelSettings)));
 	}
 	
 	
@@ -249,7 +249,7 @@ void  FLevelBilderBase::BildActor(AVirtualSpawner* VirtualSpawner, FLevelBilderC
 	}
 	else
 	{
-		VirtualSpawner->AddTaskToQueue(std::shared_ptr<FActorTaskBase>(new FActorTaskCreateBlueprintActor(LevelBilderCell, &ParentActor, ActorClass, ActorLocation, ActorRotation, LevelSettings)));
+		VirtualSpawner->AddTaskToQueue(std::unique_ptr<FActorTaskBase>(new FActorTaskCreateBlueprintActor(LevelBilderCell, &ParentActor, ActorClass, ActorLocation, ActorRotation, LevelSettings)));
 	}
 
 	
@@ -340,7 +340,7 @@ void FLevelBilderBase::DeleteCell(int X, int Y, FLevelBilderCell& LevelBilderCel
 	}
 	else
 	{
-		VirtualSpawner->AddTaskToQueue(std::shared_ptr<FActorTaskBase>(new FActorTaskDeleteActors(LevelBilderCell, nullptr, LevelSettings)));
+		VirtualSpawner->AddTaskToQueue(std::unique_ptr<FActorTaskBase>(new FActorTaskDeleteActors(LevelBilderCell, nullptr, LevelSettings)));
 	}
 	
 }
@@ -1052,7 +1052,7 @@ void FLevelBilderCarTrack::CreateHoverCar(AVirtualSpawner* VirtualSpawner, FLeve
 		}
 		else
 		{
-			VirtualSpawner->AddTaskToQueue(std::shared_ptr<FActorTaskBase>(new FActorTaskCreateHoverCar(&ParentActor, HoverCarClass, Coordinate, Tangent, std::weak_ptr<FHoverCar>(NewHoverCar), LevelSettings)));
+			VirtualSpawner->AddTaskToQueue(std::unique_ptr<FActorTaskBase>(new FActorTaskCreateHoverCar(&ParentActor, HoverCarClass, Coordinate, Tangent, std::weak_ptr<FHoverCar>(NewHoverCar), LevelSettings)));
 		}
 	}
 

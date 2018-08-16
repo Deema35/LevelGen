@@ -14,33 +14,29 @@ ALevelGenProceduralMeshActor::ALevelGenProceduralMeshActor()
 
 void ALevelGenProceduralMeshActor::AddMesh(const FProceduralFigurBuffer& WallBuffer)
 {
-	const std::map<const FLevelGeneratorMaterialSettings*, std::shared_ptr<FProceduralFigureBase>>& Meshes = WallBuffer.GetBuffer();
-
-	std::vector<std::shared_ptr<FProceduralFigureBase>> MeshesBuffer;
-
-	for (auto CurrentMesh = Meshes.begin(); CurrentMesh != Meshes.end(); CurrentMesh++)
-	{
-		MeshesBuffer.push_back(CurrentMesh->second);
-		
-	}
-
-	AddMesh(MeshesBuffer);
+	AddMesh(WallBuffer.GetBuffer());
 }
 
-void ALevelGenProceduralMeshActor::AddMesh(const std::vector<std::shared_ptr<FProceduralFigureBase>>& Meshs)
+void ALevelGenProceduralMeshActor::AddMesh(const std::map<const FLevelGeneratorMaterialSettings*, std::shared_ptr<FProceduralFigureBase>>& Meshs)
 {
-	for (int i = 0; i < Meshs.size(); i++)
+
+	for (auto MeshIT = Meshs.begin(); MeshIT != Meshs.end(); MeshIT++)
 	{
-		Meshs[i]->SetCollision(Collision);
-		ProceduralMesh->CreateMeshSection(*Meshs[i]);
+		MeshIT->second->SetCollision(Collision);
+
+		ProceduralMesh->CreateMeshSection(*MeshIT->second);
 
 
-		if (Meshs[i]->GetMaterial())
+		if (MeshIT->second->GetMaterial())
 		{
-			ProceduralMesh->SetMaterial(CurrentElement, const_cast<UMaterialInterface*>(Meshs[i]->GetMaterial()));
+			ProceduralMesh->SetMaterial(CurrentElement, const_cast<UMaterialInterface*>(MeshIT->second->GetMaterial()));
 		}
 
 		CurrentElement++;
+	}
+	for (int i = 0; i < Meshs.size(); i++)
+	{
+		
 	}
 
 

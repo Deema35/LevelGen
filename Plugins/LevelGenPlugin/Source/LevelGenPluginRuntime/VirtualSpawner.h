@@ -29,11 +29,11 @@ struct FActorTaskBase
 	FActorTaskBase(const ALevelGenerator* _ParentActor, const FLevelGeneratorSettings& _LevelSettings) :
 		ParentActor(_ParentActor), LevelSettings(_LevelSettings) {}
 
-	virtual ~FActorTaskBase() {}
+	virtual ~FActorTaskBase() = default;
 
 	virtual bool Execute() = 0;
 
-	virtual int GetTaskcomplexity() = 0;
+	virtual int GetTaskcomplexity() const = 0;
 
 	virtual EActorTaskType GetType() const = 0;
 
@@ -55,7 +55,7 @@ struct FActorTaskDeleteActors : public FActorTaskFLevelBilderCellBase
 	FActorTaskDeleteActors(FLevelBilderCell& _LevelBilderCell, const ALevelGenerator* _ParentActor, const FLevelGeneratorSettings& LevelSettings) :
 		FActorTaskFLevelBilderCellBase( _ParentActor, LevelSettings, _LevelBilderCell)  {}
 
-	virtual int GetTaskcomplexity() override { return 1; }
+	virtual int GetTaskcomplexity() const override { return 1; }
 
 	virtual bool Execute() override;
 
@@ -75,7 +75,7 @@ struct FActorTaskCreateStaticMeshActor : public FActorTaskFLevelBilderCellBase
 
 	virtual bool Execute() override;
 
-	virtual int GetTaskcomplexity() override { return 10; }
+	virtual int GetTaskcomplexity() const override { return 10; }
 
 	virtual EActorTaskType GetType() const override { return EActorTaskType::CreateStaticMesh; }
 
@@ -101,7 +101,7 @@ struct FActorTaskCreateSplineMeshActor : public FActorTaskFLevelBilderCellBase
 
 	virtual bool Execute() override;
 
-	virtual int GetTaskcomplexity() override { return 10; }
+	virtual int GetTaskcomplexity() const override { return 10; }
 
 	virtual EActorTaskType GetType() const override { return EActorTaskType::CreateSplineMesh; }
 
@@ -126,7 +126,7 @@ public:
 
 	virtual bool Execute() override;
 
-	virtual int GetTaskcomplexity() override { return 100; };
+	virtual int GetTaskcomplexity() const override { return 100; };
 
 	virtual EActorTaskType GetType() const override { return EActorTaskType::CreateProceduralActor; }
 
@@ -151,7 +151,7 @@ struct FActorTaskCreateBlueprintActor : public FActorTaskFLevelBilderCellBase
 
 	virtual bool Execute() override;
 
-	virtual int GetTaskcomplexity() override { return 20; }
+	virtual int GetTaskcomplexity() const override { return 20; }
 
 	virtual EActorTaskType GetType() const override { return EActorTaskType::CreateBlueprintActor; }
 
@@ -169,7 +169,7 @@ struct FActorTaskCreateHoverCar : public FActorTaskBase
 
 	virtual bool Execute() override;
 
-	virtual int GetTaskcomplexity() override { return 10; }
+	virtual int GetTaskcomplexity() const override { return 10; }
 
 	virtual EActorTaskType GetType() const override { return EActorTaskType::CreateHoverCar; }
 
@@ -194,7 +194,8 @@ public:
 
 	AVirtualSpawner();
 
-	void AddTaskToQueue(std::shared_ptr<FActorTaskBase> ActorTask);
+
+	void AddTaskToQueue(std::unique_ptr<FActorTaskBase> ActorTask);
 
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -204,7 +205,7 @@ private:
 
 	int ComplicitySpawnForTick;
 
-	std::queue<std::shared_ptr<FActorTaskBase>> TaskQueue;
+	std::queue<std::unique_ptr<FActorTaskBase>> TaskQueue;
 
 	std::mutex DataLock;
 

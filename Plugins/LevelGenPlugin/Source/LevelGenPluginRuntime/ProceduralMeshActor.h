@@ -18,9 +18,9 @@ class LEVELGENPLUGINRUNTIME_API ALevelGenProceduralMeshActor : public AActor
 public:
 	ALevelGenProceduralMeshActor();
 	
-	void AddMesh(const FProceduralFigurBuffer& WallBuffer);
+	inline void AddMesh(const FProceduralFigurBuffer& WallBuffer);
 
-	void AddMesh(const std::vector<std::shared_ptr<FProceduralFigureBase>>& Meshs);
+	void AddMesh(const std::map<const FLevelGeneratorMaterialSettings*, std::shared_ptr<FProceduralFigureBase>>& Meshs);
 
 	void SetMaterial(int32 ElementIndex, UMaterialInterface* Material);
 

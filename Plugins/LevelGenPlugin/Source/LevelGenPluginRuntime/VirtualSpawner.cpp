@@ -34,10 +34,11 @@ FString EActorTaskTypeToString(EActorTaskType TaskType)
 
 bool FActorTaskDeleteActors::Execute()
 {
-	for (int i = 0; i < LevelBilderCell.CreatedMeshActors.size(); i++)
+	for (size_t i = 0; i < LevelBilderCell.CreatedMeshActors.size(); i++)
 	{
 		LevelBilderCell.CreatedMeshActors[i]->Destroy();
 	}
+
 	LevelBilderCell.CreatedMeshActors.clear();
 
 	return true;
@@ -70,7 +71,7 @@ bool FActorTaskCreateStaticMeshActor::Execute()
 		return true;
 	}
 
-	return false;
+	else return false;
 }
 
 //************************************************
@@ -87,11 +88,10 @@ bool FActorTaskCreateSplineMeshActor::Execute()
 
 		SplineActor->SetScale(Scale);
 
-		
 		SplineActor->AddPoints(Points);
 		
 
-		for (int i = 0; i < SplineActor->SplineMeshComponents.Num(); i++)
+		for (size_t i = 0; i < SplineActor->SplineMeshComponents.Num(); i++)
 		{
 			if (Collision)
 			{
@@ -131,17 +131,9 @@ bool FActorTaskCreateProceduralActor::Execute()
 	}
 	else
 	{
-		std::vector<std::shared_ptr<FProceduralFigureBase>> MeshBuffer;
-
-		for (auto MeshIT = FigureBufer.GetBuffer().begin(); MeshIT != FigureBufer.GetBuffer().end(); MeshIT++)
-		{
-			MeshBuffer.push_back(MeshIT->second);
-		}
-		
-		ProceduralMeshActor->AddMesh(MeshBuffer);
+		ProceduralMeshActor->AddMesh(FigureBufer.GetBuffer());
 
 		return true;
-		
 	}
 	
 	
@@ -204,6 +196,7 @@ AVirtualSpawner::AVirtualSpawner()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+
 void AVirtualSpawner::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -213,31 +206,21 @@ void AVirtualSpawner::Tick(float DeltaSeconds)
 
 	if (Lock.try_lock())
 	{
-		if (TaskQueue.size() > 0)
+		if (!TaskQueue.empty())
 		{
-			int ComplicityCount = 0;
+			int ComplicityCount = TaskQueue.front()->GetTaskcomplexity();
 
-			if (!TaskQueue.front())
-			{
-				TaskQueue.pop();
-				return;
-			}
-
-			while (ComplicityCount + TaskQueue.front()->GetTaskcomplexity() <= ComplicitySpawnForTick)
+			while (ComplicityCount <= ComplicitySpawnForTick)
 			{
 				
 				if (TaskQueue.front()->Execute())
 				{
-					ComplicityCount += TaskQueue.front()->GetTaskcomplexity();
 					TaskQueue.pop();
-				}
-				else
-				{
-					ComplicityCount += TaskQueue.front()->GetTaskcomplexity();
+
+					if (TaskQueue.empty()) break;
 				}
 				
-				if (TaskQueue.size() == 0) break;
-
+				ComplicityCount += TaskQueue.front()->GetTaskcomplexity();
 			}
 		}
 
@@ -247,9 +230,9 @@ void AVirtualSpawner::Tick(float DeltaSeconds)
 
 }
 
-void AVirtualSpawner::AddTaskToQueue(std::shared_ptr<FActorTaskBase> ActorTask)
+void AVirtualSpawner::AddTaskToQueue(std::unique_ptr<FActorTaskBase> ActorTask)
 {
 	std::unique_lock<std::mutex> Lock(DataLock);
 
-	TaskQueue.push(ActorTask);
+	TaskQueue.push(std::move(ActorTask));
 }
