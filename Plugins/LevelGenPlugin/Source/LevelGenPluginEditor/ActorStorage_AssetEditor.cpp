@@ -35,6 +35,7 @@ const FName RoomEditorAppName = FName(TEXT("RoomEditorApp"));
 //****************************************************
 
 
+
 FActorStorage_AssetEditorBase::~FActorStorage_AssetEditorBase()
 {
 	EditedObject->pAssetEditor = nullptr;
@@ -55,13 +56,19 @@ void FActorStorage_AssetEditorBase::InitAssetEditor_RoomStorage(const EToolkitMo
 	SAssignNew(FilterBox, SSearchBox)
 		.OnTextChanged(this, &FActorStorage_AssetEditorBase::OnFilterTextChanged);
 
-
 	GraphActionMenu = CreateActionMenuWidget();
 
 	PreviewViewport = SNew(SCustomEditorViewport);
 
+	BindCommands();
 
-	const TSharedRef<FTabManager::FLayout> StandaloneDefaultLayout = FTabManager::NewLayout("CustomEditor_Layout")
+	InitAssetEditor(Mode, InitToolkitHost, RoomEditorAppName, CreateWindowTabs(), /*bCreateDefaultStandaloneMenu=*/ true, /*bCreateDefaultToolbar=*/ true, EditedObject);
+
+}
+
+TSharedRef<FTabManager::FLayout> FActorStorage_AssetEditorBase::CreateWindowTabs()
+{
+	return FTabManager::NewLayout("CustomEditor_Layout")
 		->AddArea
 		(
 			FTabManager::NewPrimaryArea()
@@ -78,7 +85,7 @@ void FActorStorage_AssetEditorBase::InitAssetEditor_RoomStorage(const EToolkitMo
 				FTabManager::NewSplitter()
 				->SetOrientation(Orient_Horizontal)
 				->SetSizeCoefficient(0.2f)
-				
+
 				->Split
 				(
 
@@ -102,11 +109,6 @@ void FActorStorage_AssetEditorBase::InitAssetEditor_RoomStorage(const EToolkitMo
 			)
 
 		);
-
-	
-	BindCommands();
-
-	InitAssetEditor(Mode, InitToolkitHost, RoomEditorAppName, StandaloneDefaultLayout, /*bCreateDefaultStandaloneMenu=*/ true, /*bCreateDefaultToolbar=*/ true, EditedObject);
 
 }
 

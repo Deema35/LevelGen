@@ -50,6 +50,8 @@ public:
 
 	virtual void DeleteActorContainer() = 0;
 
+	virtual TSharedRef<FTabManager::FLayout> CreateWindowTabs();
+
 protected:
 	
 	TSharedRef<SWidget> CreateAddToSectionButton(int32 InSectionID, TWeakPtr<SWidget> WeakRowWidget, FText AddNewText, FName MetaDataTag);
