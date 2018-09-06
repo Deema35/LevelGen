@@ -27,7 +27,7 @@ void FRoomStorageAssetActions::OpenAssetEditor(const TArray<UObject*>& InObjects
 			{
 				TSharedRef<FRoomStorage_AssetEditor> NewCustEditor(new FRoomStorage_AssetEditor());
 				PropData->pAssetEditor = &NewCustEditor.Get();
-				NewCustEditor->InitAssetEditor_RoomStorage(Mode, EditWithinLevelEditor, PropData);
+				NewCustEditor->InitAssetEditor_AssetEditorBase(Mode, EditWithinLevelEditor, PropData);
 			}
 		}
 	}

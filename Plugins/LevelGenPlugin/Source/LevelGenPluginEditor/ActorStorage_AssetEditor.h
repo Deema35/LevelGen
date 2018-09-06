@@ -46,11 +46,9 @@ public:
 
 	virtual FString GetWorldCentricTabPrefix() const override { return TEXT("RoomStorage Editor"); }
 
-	void InitAssetEditor_RoomStorage(const EToolkitMode::Type Mode, const TSharedPtr< class IToolkitHost >& InitToolkitHost, UObject* ObjectToEdit);
+	void InitAssetEditor_AssetEditorBase(const EToolkitMode::Type Mode, const TSharedPtr< class IToolkitHost >& InitToolkitHost, UObject* ObjectToEdit);
 
 	virtual void DeleteActorContainer() = 0;
-
-	virtual TSharedRef<FTabManager::FLayout> CreateWindowTabs();
 
 protected:
 	
@@ -58,7 +56,7 @@ protected:
 
 	void RefreshActionMenuName();
 
-	void RebildPreviewViewPort(UClass* ActorClass);
+	
 
 protected:
 
@@ -66,7 +64,6 @@ protected:
 
 	TSharedPtr<IDetailsView> PropertyEditor;
 
-	TSharedPtr<SCustomEditorViewport> PreviewViewport;
 
 	TSharedPtr<SSearchBox> FilterBox;
 
@@ -76,11 +73,14 @@ protected:
 
 	UActorsStorageBase * EditedObject = nullptr;
 
-	TSharedPtr<SVerticalBox> ViewportContainer;
-
 	TSharedPtr<SDockTab> ViewPortSpawnedTab;
 
 private:
+
+	virtual TSharedRef<FTabManager::FLayout> CreateWindowTabs();
+
+	virtual FName GetAppName() const = 0;
+
 	TSharedRef<class SGraphActionMenu> CreateActionMenuWidget();
 
 	TSharedRef<SDockTab> SpawnTab_Details(const FSpawnTabArgs& Args);
@@ -117,7 +117,6 @@ private:
 
 	virtual void DeleteBlankConteyners() = 0;
 
-	void RefreshViewPortContainer();
 
 };
 
@@ -126,11 +125,9 @@ class FRoomStorage_AssetEditor : public FActorStorage_AssetEditorBase
 public:
 
 	FRoomStorage_AssetEditor();
-
 	
-
-
 private:
+
 	virtual void DeleteActorContainer() override;
 
 	virtual void OnCollectAllActions(struct FGraphActionListBuilderBase& OutAllActions) override;
@@ -140,6 +137,8 @@ private:
 	virtual void OnPropertiesChanging(const FPropertyChangedEvent& e) override;
 
 	virtual void DeleteBlankConteyners() override;
+
+	virtual FName GetAppName() const override { return FName("Room storage"); }
 };
 
 
@@ -151,6 +150,7 @@ public:
 	
 
 private:
+
 	virtual void DeleteActorContainer() override;
 
 	virtual void OnCollectAllActions(struct FGraphActionListBuilderBase& OutAllActions) override;
@@ -160,6 +160,8 @@ private:
 	virtual void OnPropertiesChanging(const FPropertyChangedEvent& e) override;
 
 	virtual void DeleteBlankConteyners() override;
+
+	virtual FName GetAppName() const override { return FName("Tower storage"); }
 
 };
 
@@ -169,6 +171,7 @@ public:
 	FHoverCarStorage_AssetEditor();
 
 private:
+
 	virtual void DeleteActorContainer() override;
 
 	virtual void OnCollectAllActions(struct FGraphActionListBuilderBase& OutAllActions) override;
@@ -178,5 +181,7 @@ private:
 	virtual void OnPropertiesChanging(const FPropertyChangedEvent& e) override;
 
 	virtual void DeleteBlankConteyners() override;
+
+	virtual FName GetAppName() const override { return FName("Car storage"); }
 
 };

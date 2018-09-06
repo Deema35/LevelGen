@@ -344,7 +344,7 @@ bool FLevelRoomLink::IsCellFit(int X, int Y, int Z, const FJointPart* InJointPar
 	if (!CurrentCell.CellInst->CanRoomPlacedOnCell(GetType())) return false;
 
 	if (CurrentCell.Floors[Z].PlasedRoom) return false;
-
+	
 	if (CurrentCell.LinkedBildingZone && CurrentCell.LinkedBildingZone->GetState() == EBildingZoneState::FlooreAndWallCreated) return false;
 
 	for (int i = 0; i < CurrentCell.Floors[Z].JointPart.size(); i++)

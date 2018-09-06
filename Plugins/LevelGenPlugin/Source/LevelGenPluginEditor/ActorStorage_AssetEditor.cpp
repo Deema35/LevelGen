@@ -23,11 +23,9 @@
 #include "ActorContainer.h"
 #include "HoverCars/HoverCarStorage.h"
 #include "AssetCommands_RoomStorage.h"
-#include "SCustomEditorViewport.h"
 
 const FName FCustomEditorTabs::DetailsID(TEXT("Details"));
 const FName FCustomEditorTabs::ActionMenuID(TEXT("ActionMenu"));
-const FName RoomEditorAppName = FName(TEXT("RoomEditorApp"));
 
 
 //*************************************************
@@ -48,21 +46,16 @@ FText FActorStorage_AssetEditorBase::GetToolkitName() const
 	return GetLabelForObject(EditedObject);
 }
 
-void FActorStorage_AssetEditorBase::InitAssetEditor_RoomStorage(const EToolkitMode::Type Mode, const TSharedPtr< class IToolkitHost >& InitToolkitHost, UObject* ObjectToEdit)
+void FActorStorage_AssetEditorBase::InitAssetEditor_AssetEditorBase(const EToolkitMode::Type Mode, const TSharedPtr< class IToolkitHost >& InitToolkitHost, UObject* ObjectToEdit)
 {
 
 	EditedObject = Cast<UActorsStorageBase>(ObjectToEdit);
 
-	SAssignNew(FilterBox, SSearchBox)
-		.OnTextChanged(this, &FActorStorage_AssetEditorBase::OnFilterTextChanged);
-
-	GraphActionMenu = CreateActionMenuWidget();
-
-	PreviewViewport = SNew(SCustomEditorViewport);
+	
 
 	BindCommands();
 
-	InitAssetEditor(Mode, InitToolkitHost, RoomEditorAppName, CreateWindowTabs(), /*bCreateDefaultStandaloneMenu=*/ true, /*bCreateDefaultToolbar=*/ true, EditedObject);
+	InitAssetEditor(Mode, InitToolkitHost, GetAppName(), CreateWindowTabs(), /*bCreateDefaultStandaloneMenu=*/ true, /*bCreateDefaultToolbar=*/ true, EditedObject);
 
 }
 
@@ -135,6 +128,10 @@ void FActorStorage_AssetEditorBase::RegisterTabSpawners(const TSharedRef<class F
 
 TSharedRef<SDockTab> FActorStorage_AssetEditorBase::SpawnTab_ActionMenu(const FSpawnTabArgs& Args)
 {
+	SAssignNew(FilterBox, SSearchBox)
+		.OnTextChanged(this, &FActorStorage_AssetEditorBase::OnFilterTextChanged);
+
+	GraphActionMenu = CreateActionMenuWidget();
 	
 	return SNew(SDockTab)
 		.Label(FText::FromString("SGAction Menu"))
@@ -166,6 +163,7 @@ TSharedRef<SDockTab> FActorStorage_AssetEditorBase::SpawnTab_ActionMenu(const FS
 
 TSharedRef<SDockTab> FActorStorage_AssetEditorBase::SpawnTab_Details(const FSpawnTabArgs& Args)
 {
+
 	FPropertyEditorModule& PropertyEditorModule = FModuleManager::GetModuleChecked<FPropertyEditorModule>("PropertyEditor");
 	const FDetailsViewArgs DetailsViewArgs(false, false, true, FDetailsViewArgs::HideNameArea, true, this);
 	TSharedRef<IDetailsView> PropertyEditorRef = PropertyEditorModule.CreateDetailView(DetailsViewArgs);
@@ -175,13 +173,11 @@ TSharedRef<SDockTab> FActorStorage_AssetEditorBase::SpawnTab_Details(const FSpaw
 	ViewPortSpawnedTab = SNew(SDockTab)
 		.Label(FText::FromString("Details"))
 		[
-			SAssignNew(ViewportContainer, SVerticalBox)
+			PropertyEditor.ToSharedRef()
 	
 		];
 
-	RefreshViewPortContainer();
 
-	PreviewViewport->SetParentTab(ViewPortSpawnedTab);
 	
 	return ViewPortSpawnedTab.ToSharedRef();
 }
@@ -283,7 +279,6 @@ void FActorStorage_AssetEditorBase::OnActionSelected(const TArray< TSharedPtr<FE
 			CurrentSelectedActionMenuObject = ActorContainer;
 			PropertyEditor->SetObject(ActorContainer);
 			
-			RebildPreviewViewPort(ActorContainer->GetActorClass());
 			
 		}
 	}
@@ -375,38 +370,9 @@ void FActorStorage_AssetEditorBase::RefreshActionMenuName()
 	}
 }
 
-void FActorStorage_AssetEditorBase::RebildPreviewViewPort(UClass* ActorClass)
-{
-	if (!PreviewViewport->GetIsViewPortValid())
-	{
-		PreviewViewport = SNew(SCustomEditorViewport);
 
-		RefreshViewPortContainer();
 
-		PreviewViewport->SetParentTab(ViewPortSpawnedTab);
-	}
-	
-	PreviewViewport->RebildScen(ActorClass);
-}
 
-void FActorStorage_AssetEditorBase::RefreshViewPortContainer()
-{
-	ViewportContainer->ClearChildren();
-	ViewportContainer->AddSlot()
-		[
-			PreviewViewport.ToSharedRef()
-		];
-
-	ViewportContainer->AddSlot()
-		.FillHeight(0.75)
-		.VAlign(VAlign_Top)
-
-		[
-			PropertyEditor.ToSharedRef()
-		];
-
-	
-}
 
 
 
@@ -466,7 +432,6 @@ void FRoomStorage_AssetEditor::DeleteActorContainer()
 		GraphActionMenu->RefreshAllActions(true);
 		EditedObject->Modify();
 		PropertyEditor->SetObject(nullptr);
-		RebildPreviewViewPort(nullptr);
 	}
 }
 
@@ -673,7 +638,6 @@ void FTowerStorage_AssetEditor::DeleteActorContainer()
 		GraphActionMenu->RefreshAllActions(true);
 		EditedObject->Modify();
 		PropertyEditor->SetObject(nullptr);
-		RebildPreviewViewPort(nullptr);
 	}
 }
 
@@ -811,7 +775,6 @@ void FHoverCarStorage_AssetEditor::DeleteActorContainer()
 		GraphActionMenu->RefreshAllActions(true);
 		EditedObject->Modify();
 		PropertyEditor->SetObject(nullptr);
-		RebildPreviewViewPort(nullptr);
 	}
 }
 

@@ -205,6 +205,7 @@ public:
 
 	bool IsNeedCreateWall(FVector OtherCellCoordinate);
 
+
 private:
 
 	void LinkedRoomToLevelCells(const FDataStorage& DataStorage);

@@ -24,7 +24,7 @@ void FHoverCarStorageAssetActions::OpenAssetEditor(const TArray<UObject*>& InObj
 			{
 				TSharedRef<FHoverCarStorage_AssetEditor> NewCustEditor(new FHoverCarStorage_AssetEditor());
 				PropData->pAssetEditor = &NewCustEditor.Get();
-				NewCustEditor->InitAssetEditor_RoomStorage(Mode, EditWithinLevelEditor, PropData);
+				NewCustEditor->InitAssetEditor_AssetEditorBase(Mode, EditWithinLevelEditor, PropData);
 			}
 		}
 	}

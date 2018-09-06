@@ -27,7 +27,7 @@ void FTowerStorageAssetActions::OpenAssetEditor(const TArray<UObject*>& InObject
 			{
 				TSharedRef<FTowerStorage_AssetEditor> NewCustEditor(new FTowerStorage_AssetEditor());
 				PropData->pAssetEditor = &NewCustEditor.Get();
-				NewCustEditor->InitAssetEditor_RoomStorage(Mode, EditWithinLevelEditor, PropData);
+				NewCustEditor->InitAssetEditor_AssetEditorBase(Mode, EditWithinLevelEditor, PropData);
 				FAssetEditorManager::Get().NotifyAssetOpened(PropData, PropData->pAssetEditor);
 			}
 		}
