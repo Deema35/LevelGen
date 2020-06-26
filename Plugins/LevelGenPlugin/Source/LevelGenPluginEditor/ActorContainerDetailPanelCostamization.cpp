@@ -7,6 +7,7 @@
 #include "NotificationManager.h"
 #include "SButton.h"
 #include "STextBlock.h"
+#include "AssetEditorManager.h"
 #include "Rooms/RoomStorage.h"
 #include "ActorStorage_AssetEditor.h"
 #include "ActorContainer.h"

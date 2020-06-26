@@ -51,7 +51,7 @@ FLevelCellBase* ELevelCellTypeCreate(ELevelCellType Type, FLevelCellData& CellDa
 //FLevelCellData
 //*******************************************************
 
-FLevelCellData::FLevelCellData(const FLevelGeneratorSettings& Settings, FVector2D _CellCoordinate, const FDataStorage& DataStorage) : LevelSettings(Settings), CellCoordinate(_CellCoordinate)
+FLevelCellData::FLevelCellData(const FLevelGeneratorSettings& Settings, FVector2D _CellCoordinate, const FDataStorage& DataStorage) : CellCoordinate(_CellCoordinate), LevelSettings(Settings)
 {
 	Floors.resize(Settings.FloorNum, FLevelFloorData(DataStorage));
 

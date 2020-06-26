@@ -77,7 +77,7 @@ void FLevelGenRoadBase::CheckRoadPlase()
 
 bool FLevelGenRoadBase::GetRangeCoordinatForRoad(std::pair<int, int>& CoordinateRange) const
 {
-	FVector2D RoadNumber = GetRoadNumber();
+	FVector2D RoadNumber_loc = GetRoadNumber();
 
 	FVector2D RoadCoordinate1;
 	FVector2D RoadCoordinate2;
@@ -86,15 +86,15 @@ bool FLevelGenRoadBase::GetRangeCoordinatForRoad(std::pair<int, int>& Coordinate
 	{
 	case ERoadDirection::Horizontal:
 
-		RoadCoordinate1 = FVector2D(RoadNumber.X - 1, RoadNumber.Y);
-		RoadCoordinate2 = FVector2D(RoadNumber.X + 1, RoadNumber.Y);
+		RoadCoordinate1 = FVector2D(RoadNumber_loc.X - 1, RoadNumber_loc.Y);
+		RoadCoordinate2 = FVector2D(RoadNumber_loc.X + 1, RoadNumber_loc.Y);
 
 		break;
 
 	case ERoadDirection::Vertical:
 
-		RoadCoordinate1 = FVector2D(RoadNumber.X, RoadNumber.Y - 1);
-		RoadCoordinate2 = FVector2D(RoadNumber.X, RoadNumber.Y + 1);
+		RoadCoordinate1 = FVector2D(RoadNumber_loc.X, RoadNumber_loc.Y - 1);
+		RoadCoordinate2 = FVector2D(RoadNumber_loc.X, RoadNumber_loc.Y + 1);
 
 		break;
 	}
@@ -348,15 +348,15 @@ std::pair<FLevelGenRoadBase*, FLevelGenRoadBase*> FLevelGenRoadHorizontal::GetNe
 {
 	std::pair<FLevelGenRoadBase*, FLevelGenRoadBase*> Roads(nullptr, nullptr);
 
-	FVector2D RoadNumber = GetRoadNumber();
+	FVector2D RoadNumber_loc = GetRoadNumber();
 	
-	if (RoadsMap.IsCellExist(RoadNumber.X - 1, RoadNumber.Y))
+	if (RoadsMap.IsCellExist(RoadNumber_loc.X - 1, RoadNumber_loc.Y))
 	{
-		Roads.first = RoadsMap.GetCell(RoadNumber.X - 1, RoadNumber.Y).get();
+		Roads.first = RoadsMap.GetCell(RoadNumber_loc.X - 1, RoadNumber_loc.Y).get();
 	}
-	if (RoadsMap.IsCellExist(RoadNumber.X + 1, RoadNumber.Y))
+	if (RoadsMap.IsCellExist(RoadNumber_loc.X + 1, RoadNumber_loc.Y))
 	{
-		Roads.second = RoadsMap.GetCell(RoadNumber.X + 1, RoadNumber.Y).get();
+		Roads.second = RoadsMap.GetCell(RoadNumber_loc.X + 1, RoadNumber_loc.Y).get();
 	}
 	
 	return Roads;
@@ -366,15 +366,15 @@ std::pair<FLevelGenRoadBase*, FLevelGenRoadBase*> FLevelGenRoadHorizontal::GetNe
 {
 	std::pair<FLevelGenRoadBase*, FLevelGenRoadBase*> Roads(nullptr, nullptr);
 
-	FVector2D RoadNumber = GetRoadNumber();
+	FVector2D RoadNumber_loc = GetRoadNumber();
 
-	if (RoadsMap.IsCellExist(RoadNumber.X - 2, RoadNumber.Y))
+	if (RoadsMap.IsCellExist(RoadNumber_loc.X - 2, RoadNumber_loc.Y))
 	{
-		Roads.first = RoadsMap.GetCell(RoadNumber.X - 2, RoadNumber.Y).get();
+		Roads.first = RoadsMap.GetCell(RoadNumber_loc.X - 2, RoadNumber_loc.Y).get();
 	}
-	if (RoadsMap.IsCellExist(RoadNumber.X + 2, RoadNumber.Y))
+	if (RoadsMap.IsCellExist(RoadNumber_loc.X + 2, RoadNumber_loc.Y))
 	{
-		Roads.second = RoadsMap.GetCell(RoadNumber.X + 2, RoadNumber.Y).get();
+		Roads.second = RoadsMap.GetCell(RoadNumber_loc.X + 2, RoadNumber_loc.Y).get();
 	}
 
 	return Roads;
@@ -384,15 +384,15 @@ std::pair<FLevelGenRoadBase*, FLevelGenRoadBase*> FLevelGenRoadHorizontal::GetCr
 {
 	std::pair<FLevelGenRoadBase*, FLevelGenRoadBase*> Result(std::make_pair(nullptr, nullptr));
 
-	FVector2D RoadNumber = GetRoadNumber();
+	FVector2D RoadNumber_loc = GetRoadNumber();
 	
-	if (RoadsMap.IsCellExist(RoadNumber.X, RoadNumber.Y - 1))
+	if (RoadsMap.IsCellExist(RoadNumber_loc.X, RoadNumber_loc.Y - 1))
 	{
-		Result.first = RoadsMap.GetCell(RoadNumber.X, RoadNumber.Y - 1).get();
+		Result.first = RoadsMap.GetCell(RoadNumber_loc.X, RoadNumber_loc.Y - 1).get();
 	}
-	if (RoadsMap.IsCellExist(RoadNumber.X, RoadNumber.Y + 1))
+	if (RoadsMap.IsCellExist(RoadNumber_loc.X, RoadNumber_loc.Y + 1))
 	{
-		Result.second = RoadsMap.GetCell(RoadNumber.X, RoadNumber.Y + 1).get();
+		Result.second = RoadsMap.GetCell(RoadNumber_loc.X, RoadNumber_loc.Y + 1).get();
 	}
 	
 	return Result;
@@ -581,15 +581,15 @@ std::pair<FLevelGenRoadBase*, FLevelGenRoadBase*> FLevelGenRoadVertical::GetNear
 {
 	std::pair<FLevelGenRoadBase*, FLevelGenRoadBase*> Roads(nullptr, nullptr);
 
-	FVector2D RoadNumber = GetRoadNumber();
+	FVector2D RoadNumber_loc = GetRoadNumber();
 	
-	if (RoadsMap.IsCellExist(RoadNumber.X, RoadNumber.Y - 1))
+	if (RoadsMap.IsCellExist(RoadNumber_loc.X, RoadNumber_loc.Y - 1))
 	{
-		Roads.first = RoadsMap.GetCell(RoadNumber.X, RoadNumber.Y - 1).get();
+		Roads.first = RoadsMap.GetCell(RoadNumber_loc.X, RoadNumber_loc.Y - 1).get();
 	}
-	if (RoadsMap.IsCellExist(RoadNumber.X, RoadNumber.Y + 1))
+	if (RoadsMap.IsCellExist(RoadNumber_loc.X, RoadNumber_loc.Y + 1))
 	{
-		Roads.second = RoadsMap.GetCell(RoadNumber.X, RoadNumber.Y + 1).get();
+		Roads.second = RoadsMap.GetCell(RoadNumber_loc.X, RoadNumber_loc.Y + 1).get();
 	}
 	
 	return Roads;
@@ -599,15 +599,15 @@ std::pair<FLevelGenRoadBase*, FLevelGenRoadBase*> FLevelGenRoadVertical::GetNear
 {
 	std::pair<FLevelGenRoadBase*, FLevelGenRoadBase*> Roads(nullptr, nullptr);
 
-	FVector2D RoadNumber = GetRoadNumber();
+	FVector2D RoadNumber_loc = GetRoadNumber();
 
-	if (RoadsMap.IsCellExist(RoadNumber.X, RoadNumber.Y - 2))
+	if (RoadsMap.IsCellExist(RoadNumber_loc.X, RoadNumber_loc.Y - 2))
 	{
-		Roads.first = RoadsMap.GetCell(RoadNumber.X, RoadNumber.Y - 2).get();
+		Roads.first = RoadsMap.GetCell(RoadNumber_loc.X, RoadNumber_loc.Y - 2).get();
 	}
-	if (RoadsMap.IsCellExist(RoadNumber.X, RoadNumber.Y + 2))
+	if (RoadsMap.IsCellExist(RoadNumber_loc.X, RoadNumber_loc.Y + 2))
 	{
-		Roads.second = RoadsMap.GetCell(RoadNumber.X, RoadNumber.Y + 2).get();
+		Roads.second = RoadsMap.GetCell(RoadNumber_loc.X, RoadNumber_loc.Y + 2).get();
 	}
 
 	return Roads;
@@ -617,15 +617,15 @@ std::pair<FLevelGenRoadBase*, FLevelGenRoadBase*> FLevelGenRoadVertical::GetCros
 {
 	std::pair<FLevelGenRoadBase*, FLevelGenRoadBase*> Result(std::make_pair(nullptr, nullptr));
 
-	FVector2D RoadNumber = GetRoadNumber();
+	FVector2D RoadNumber_loc = GetRoadNumber();
 	
-	if (RoadsMap.IsCellExist(RoadNumber.X - 1, RoadNumber.Y))
+	if (RoadsMap.IsCellExist(RoadNumber_loc.X - 1, RoadNumber_loc.Y))
 	{
-		Result.first = RoadsMap.GetCell(RoadNumber.X - 1, RoadNumber.Y).get();
+		Result.first = RoadsMap.GetCell(RoadNumber_loc.X - 1, RoadNumber_loc.Y).get();
 	}
-	if (RoadsMap.IsCellExist(RoadNumber.X + 1, RoadNumber.Y))
+	if (RoadsMap.IsCellExist(RoadNumber_loc.X + 1, RoadNumber_loc.Y))
 	{
-		Result.second = RoadsMap.GetCell(RoadNumber.X + 1, RoadNumber.Y).get();
+		Result.second = RoadsMap.GetCell(RoadNumber_loc.X + 1, RoadNumber_loc.Y).get();
 	}
 	
 	return Result;

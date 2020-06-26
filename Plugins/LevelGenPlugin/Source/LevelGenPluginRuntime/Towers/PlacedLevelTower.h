@@ -34,7 +34,7 @@ public:
 struct FPlacedLevelTower : FPlacedLevelTowerBase
 {
 	FPlacedLevelTower(const FLevelTower* _Tower, FVector2D _StartCoordinate, EYawTurn _Yaw, FDataStorage& DataStorage, const FLevelGeneratorSettings& _LevelSettings)
-		: Tower(_Tower), FPlacedLevelTowerBase(_StartCoordinate, _Yaw, DataStorage, _LevelSettings)
+		: FPlacedLevelTowerBase(_StartCoordinate, _Yaw, DataStorage, _LevelSettings), Tower(_Tower)
 	{
 		LinkedTowerToLevelCells(DataStorage, _LevelSettings);
 	}
@@ -51,7 +51,7 @@ private:
 struct FPlacedLevelBilding : FPlacedLevelTowerBase
 {
 	FPlacedLevelBilding(const FLevelBilding* _Bilding, FVector2D _StartCoordinate, EYawTurn _Yaw, FDataStorage& DataStorage, const FLevelGeneratorSettings& _LevelSettings)
-		: Bilding(_Bilding), FPlacedLevelTowerBase(_StartCoordinate, _Yaw, DataStorage, _LevelSettings)
+		: FPlacedLevelTowerBase(_StartCoordinate, _Yaw, DataStorage, _LevelSettings), Bilding(_Bilding)
 	{
 		LinkedTowerToLevelCells(DataStorage, _LevelSettings);
 	}

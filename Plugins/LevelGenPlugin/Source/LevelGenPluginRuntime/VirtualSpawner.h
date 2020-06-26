@@ -94,7 +94,7 @@ struct FActorTaskCreateSplineMeshActor : public FActorTaskFLevelBilderCellBase
 {
 	FActorTaskCreateSplineMeshActor(FLevelBilderCell& _LevelBilderCell, const ALevelGenerator* _ParentActor, UStaticMesh* _Mesh, FVector _ActorLoc, const std::vector<FVector> _Points, FVector2D _Scale, FName _ActorTag, bool _Collision,
 		const FLevelGeneratorSettings& LevelSettings) :
-		FActorTaskFLevelBilderCellBase(_ParentActor, LevelSettings, _LevelBilderCell), Mesh(_Mesh), ActorLoc(_ActorLoc), Points(_Points), Scale(_Scale), Collision(_Collision)
+		FActorTaskFLevelBilderCellBase(_ParentActor, LevelSettings, _LevelBilderCell), Mesh(_Mesh), Points(_Points), Scale(_Scale), ActorLoc(_ActorLoc), Collision(_Collision)
 	{
 
 	}

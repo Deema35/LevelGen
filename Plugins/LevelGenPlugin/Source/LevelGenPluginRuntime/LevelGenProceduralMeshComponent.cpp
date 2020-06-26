@@ -116,7 +116,7 @@ void FLevelGenProceduralMeshSceneProxy::GetDynamicMeshElements(const TArray<cons
 	if (bWireframe)
 	{
 		WireframeMaterialInstance = new FColoredMaterialRenderProxy(
-			GEngine->WireframeMaterial ? GEngine->WireframeMaterial->GetRenderProxy(IsSelected()) : NULL,
+			GEngine->WireframeMaterial ? GEngine->WireframeMaterial->GetRenderProxy() : NULL,
 			FLinearColor(0, 0.5f, 1.f)
 		);
 
@@ -128,7 +128,7 @@ void FLevelGenProceduralMeshSceneProxy::GetDynamicMeshElements(const TArray<cons
 	{
 		if (Sections[i] && Sections[i]->bSectionVisible)
 		{
-			FMaterialRenderProxy* MaterialProxy = bWireframe ? WireframeMaterialInstance : Sections[i]->Material->GetRenderProxy(IsSelected());
+			FMaterialRenderProxy* MaterialProxy = bWireframe ? WireframeMaterialInstance : Sections[i]->Material->GetRenderProxy();
 
 			// For each view..
 			for (int32 ViewIndex = 0; ViewIndex < Views.Num(); ViewIndex++)
@@ -143,7 +143,7 @@ void FLevelGenProceduralMeshSceneProxy::GetDynamicMeshElements(const TArray<cons
 					Mesh.bWireframe = bWireframe;
 					Mesh.VertexFactory = &Sections[i]->VertexFactory;
 					Mesh.MaterialRenderProxy = MaterialProxy;
-					BatchElement.PrimitiveUniformBuffer = CreatePrimitiveUniformBufferImmediate(GetLocalToWorld(), GetBounds(), GetLocalBounds(), true, UseEditorDepthTest());
+					BatchElement.PrimitiveUniformBuffer = nullptr;
 					BatchElement.FirstIndex = 0;
 					BatchElement.NumPrimitives = Sections[i]->IndexBuffer.Indices.Num() / 3;
 					BatchElement.MinVertexIndex = 0;
@@ -168,7 +168,7 @@ void FLevelGenProceduralMeshSceneProxy::GetDynamicMeshElements(const TArray<cons
 			if (ViewFamily.EngineShowFlags.Collision && IsCollisionEnabled() && BodySetup->GetCollisionTraceFlag() != ECollisionTraceFlag::CTF_UseComplexAsSimple)
 			{
 				FTransform GeomTransform(GetLocalToWorld());
-				BodySetup->AggGeom.GetAggGeom(GeomTransform, GetSelectionColor(FColor(157, 149, 223, 255), IsSelected(), IsHovered()).ToFColor(true), NULL, false, false, UseEditorDepthTest(), ViewIndex, Collector);
+				BodySetup->AggGeom.GetAggGeom(GeomTransform, GetSelectionColor(FColor(157, 149, 223, 255), IsSelected(), IsHovered()).ToFColor(true), NULL, false, false, DrawsVelocity(), ViewIndex, Collector);
 			}
 
 			// Render bounds

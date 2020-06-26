@@ -588,7 +588,7 @@ void FDataFillerBildingDisposer::FillData(FVector2D Start, FVector2D End)
 					std::shuffle(Bildings.begin(), Bildings.end(), LevelGenerator.GetRandomGenerator().GetGenerator());
 					for (auto CurrentBilding : Bildings)
 					{
-						bool On90Deg = LevelGenerator.GetRandomGenerator().GetRandomNumber(0, 1);
+						bool On90Deg = (bool)LevelGenerator.GetRandomGenerator().GetRandomNumber(0, 1);
 
 
 						if (CurrentBilding->IsPlaceFit(FVector2D(i, j), On90Deg ? EYawTurn::HalfPi : EYawTurn::Zero, DataStorage))

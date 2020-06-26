@@ -77,17 +77,17 @@ void FLevelGenBildingZoneBase::CreateGraphLayers()
 	}
 }
 
-void FLevelGenBildingZoneBase::CreateTowers(const FLevelGeneratorSettings& LevelSettings, const ALevelGenerator& LevelGenerator, FDataStorage& DataStorage)
+void FLevelGenBildingZoneBase::CreateTowers(const FLevelGeneratorSettings& LevelSettings_loc, const ALevelGenerator& LevelGenerator_loc, FDataStorage& DataStorage_loc)
 {
-	FVector2D NumTowers(RoundNumber(Size.X / LevelSettings.TowerFrequency, ERoundType::Up), RoundNumber(Size.Y / LevelSettings.TowerFrequency, ERoundType::Up));
+	FVector2D NumTowers(RoundNumber(Size.X / LevelSettings_loc.TowerFrequency, ERoundType::Up), RoundNumber(Size.Y / LevelSettings_loc.TowerFrequency, ERoundType::Up));
 
 	std::vector<const FLevelTower*> TowersFromStorage;
-	LevelGenerator.GetTowerStorage()->GetTowers(TowersFromStorage);
+	LevelGenerator_loc.GetTowerStorage()->GetTowers(TowersFromStorage);
 
 
-	std::shuffle(TowersFromStorage.begin(), TowersFromStorage.end(), LevelGenerator.GetRandomGenerator().GetGenerator());
+	std::shuffle(TowersFromStorage.begin(), TowersFromStorage.end(), LevelGenerator_loc.GetRandomGenerator().GetGenerator());
 
-	UObjectsDisposer TowerDisposer(std::make_pair(Coordinate, Coordinate + Size), LevelGenerator.GetRandomGenerator().GetGenerator(), LevelSettings);
+	UObjectsDisposer TowerDisposer(std::make_pair(Coordinate, Coordinate + Size), LevelGenerator_loc.GetRandomGenerator().GetGenerator(), LevelSettings_loc);
 
 	if (NumTowers.X < 0 || NumTowers.Y < 0) throw;
 
@@ -104,20 +104,20 @@ void FLevelGenBildingZoneBase::CreateTowers(const FLevelGeneratorSettings& Level
 			{
 				auto Predicate = [&](FVector Coordinate)
 				{
-					return TowersFromStorage[k]->IsPlaceFit(FVector2D(Coordinate), EYawTurn::Zero, DataStorage);
+					return TowersFromStorage[k]->IsPlaceFit(FVector2D(Coordinate), EYawTurn::Zero, DataStorage_loc);
 				};
 
 				FVector2D ToverCoordinate(0,0);
 
-				int CellOffsetX = LevelGenerator.GetRandomGenerator().GetRandomNumber(-LevelSettings.TowerFrequency / 2, LevelSettings.TowerFrequency / 2);
-				int CellOffsetY = LevelGenerator.GetRandomGenerator().GetRandomNumber(-LevelSettings.TowerFrequency / 2, LevelSettings.TowerFrequency / 2);
+				int CellOffsetX = LevelGenerator_loc.GetRandomGenerator().GetRandomNumber(-LevelSettings_loc.TowerFrequency / 2, LevelSettings_loc.TowerFrequency / 2);
+				int CellOffsetY = LevelGenerator_loc.GetRandomGenerator().GetRandomNumber(-LevelSettings_loc.TowerFrequency / 2, LevelSettings_loc.TowerFrequency / 2);
 
 
-				FVector2D SearchStartCoordinate = Coordinate + FVector2D(i * LevelSettings.TowerFrequency + CellOffsetX, j * LevelSettings.TowerFrequency + CellOffsetY);
+				FVector2D SearchStartCoordinate = Coordinate + FVector2D(i * LevelSettings_loc.TowerFrequency + CellOffsetX, j * LevelSettings_loc.TowerFrequency + CellOffsetY);
 
 				if (TowerDisposer.GetLocation(ToverCoordinate, SearchStartCoordinate, 0, TowersFromStorage[k]->Size, Predicate))
 				{
-					BildingTowers[i][j] = std::shared_ptr<FPlacedLevelTower>(new FPlacedLevelTower(TowersFromStorage[k], ToverCoordinate, EYawTurn::Zero, DataStorage, LevelSettings));
+					BildingTowers[i][j] = std::shared_ptr<FPlacedLevelTower>(new FPlacedLevelTower(TowersFromStorage[k], ToverCoordinate, EYawTurn::Zero, DataStorage_loc, LevelSettings_loc));
 					break;
 				}
 			}
@@ -1730,12 +1730,12 @@ void FLevelGenBildingZoneBase::EdgeCut()
 
 
 
-bool FLevelGenBildingZoneBase::CheckCell(FVector2D Coordinate)
+bool FLevelGenBildingZoneBase::CheckCell(FVector2D Coordinate_loc)
 {
 	
-	if (DataStorage.LevelMap.IsCellExist(Coordinate) && DataStorage.LevelMap.GetCell(Coordinate)->CellInst && DataStorage.LevelMap.GetCell(Coordinate)->CellInst->CanEdgeCut())
+	if (DataStorage.LevelMap.IsCellExist(Coordinate_loc) && DataStorage.LevelMap.GetCell(Coordinate_loc)->CellInst && DataStorage.LevelMap.GetCell(Coordinate_loc)->CellInst->CanEdgeCut())
 	{
-		for (auto CellFloorIT = DataStorage.LevelMap.GetCell(Coordinate)->Floors.begin(); CellFloorIT != DataStorage.LevelMap.GetCell(Coordinate)->Floors.end(); CellFloorIT++)
+		for (auto CellFloorIT = DataStorage.LevelMap.GetCell(Coordinate_loc)->Floors.begin(); CellFloorIT != DataStorage.LevelMap.GetCell(Coordinate_loc)->Floors.end(); CellFloorIT++)
 		{
 			if (CellFloorIT->PlasedRoom)
 			{
@@ -1750,12 +1750,12 @@ bool FLevelGenBildingZoneBase::CheckCell(FVector2D Coordinate)
 	return false;
 }
 
-bool FLevelGenBildingZoneBase::CheckCellFloors(FVector2D Coordinate)
+bool FLevelGenBildingZoneBase::CheckCellFloors(FVector2D Coordinate_loc)
 {
 
-	if (DataStorage.LevelMap.IsCellExist(Coordinate))
+	if (DataStorage.LevelMap.IsCellExist(Coordinate_loc))
 	{
-		for (auto CellFloorIT = DataStorage.LevelMap.GetCell(Coordinate)->Floors.begin(); CellFloorIT != DataStorage.LevelMap.GetCell(Coordinate)->Floors.end(); CellFloorIT++)
+		for (auto CellFloorIT = DataStorage.LevelMap.GetCell(Coordinate_loc)->Floors.begin(); CellFloorIT != DataStorage.LevelMap.GetCell(Coordinate_loc)->Floors.end(); CellFloorIT++)
 		{
 			if (CellFloorIT->PlasedRoom)
 			{
@@ -1770,11 +1770,11 @@ bool FLevelGenBildingZoneBase::CheckCellFloors(FVector2D Coordinate)
 	return false;
 }
 
-void FLevelGenBildingZoneBase::ReplaceCell(FVector2D Coordinate)
+void FLevelGenBildingZoneBase::ReplaceCell(FVector2D Coordinate_loc)
 {
-	std::shared_ptr<FLevelCellBase> LastCell = std::move(DataStorage.LevelMap.GetCell(Coordinate)->CellInst);
+	std::shared_ptr<FLevelCellBase> LastCell = std::move(DataStorage.LevelMap.GetCell(Coordinate_loc)->CellInst);
 	FLevelCellBilding* Bilding = static_cast<FLevelCellBilding*>(LastCell.get());
-	DataStorage.LevelMap.GetCell(Coordinate)->CellInst = std::shared_ptr<FLevelCellBase>(new FLevelCellThroughCell(*Bilding));
+	DataStorage.LevelMap.GetCell(Coordinate_loc)->CellInst = std::shared_ptr<FLevelCellBase>(new FLevelCellThroughCell(*Bilding));
 }
 
 
@@ -1912,7 +1912,7 @@ void FLevelGenBildingZone::CreateProceduralFigure()
 		GetSenterCoordinate().Y * LevelSettings.CellSize, 0), &LevelSettings.RoadGroundMaterial);
 }
 
-void FLevelGenBildingZone::ConnectBildingToLevelCells(FDataStorage& DataStorage)
+void FLevelGenBildingZone::ConnectBildingToLevelCells(FDataStorage& DataStorage_loc)
 {
 	for (int i = 0; i < (int)EDirection::end; i++)
 	{
@@ -1922,7 +1922,7 @@ void FLevelGenBildingZone::ConnectBildingToLevelCells(FDataStorage& DataStorage)
 
 		for (auto CurrentCoordinate = WallCellsCoordinate.begin(); CurrentCoordinate != WallCellsCoordinate.end(); CurrentCoordinate++)
 		{
-			DataStorage.LevelMap.GetCell(*CurrentCoordinate)->LinkedBildingZone = this;
+			DataStorage_loc.LevelMap.GetCell(*CurrentCoordinate)->LinkedBildingZone = this;
 		}
 	}
 
@@ -1930,22 +1930,22 @@ void FLevelGenBildingZone::ConnectBildingToLevelCells(FDataStorage& DataStorage)
 	{
 		for (int j = Coordinate.Y; j < Coordinate.Y + Size.Y; j++)
 		{
-			if (!DataStorage.LevelMap.GetCell(i, j)->CellInst)
+			if (!DataStorage_loc.LevelMap.GetCell(i, j)->CellInst)
 			{
-				DataStorage.LevelMap.GetCell(i, j)->CellInst = std::shared_ptr<FLevelCellBase>(ELevelCellTypeCreate(ELevelCellType::Bilding, *DataStorage.LevelMap.GetCell(i, j)));
+				DataStorage_loc.LevelMap.GetCell(i, j)->CellInst = std::shared_ptr<FLevelCellBase>(ELevelCellTypeCreate(ELevelCellType::Bilding, *DataStorage_loc.LevelMap.GetCell(i, j)));
 
 			}
 			else
 			{
-				if (DataStorage.LevelMap.GetCell(i, j)->CellInst->GetCellType() != ELevelCellType::Tower)
+				if (DataStorage_loc.LevelMap.GetCell(i, j)->CellInst->GetCellType() != ELevelCellType::Tower)
 				{
-					DataStorage.LevelMap.GetCell(i, j)->CellInst = std::shared_ptr<FLevelCellBase>(ELevelCellTypeCreate(ELevelCellType::Bilding, *DataStorage.LevelMap.GetCell(i, j)));
+					DataStorage_loc.LevelMap.GetCell(i, j)->CellInst = std::shared_ptr<FLevelCellBase>(ELevelCellTypeCreate(ELevelCellType::Bilding, *DataStorage_loc.LevelMap.GetCell(i, j)));
 					UE_LOG(LogTemp, Warning, TEXT("ConnectBildingToLevelCells bad cell type %s"),
-						*GetEnumValueAsString<ELevelCellType>("ELevelCellType", DataStorage.LevelMap.GetCell(i, j)->CellInst->GetCellType()));
+						*GetEnumValueAsString<ELevelCellType>("ELevelCellType", DataStorage_loc.LevelMap.GetCell(i, j)->CellInst->GetCellType()));
 
 				}
 			}
-			DataStorage.LevelMap.GetCell(i, j)->LinkedBildingZone = this;
+			DataStorage_loc.LevelMap.GetCell(i, j)->LinkedBildingZone = this;
 		}
 	}
 
@@ -2032,7 +2032,7 @@ void FLevelGenBildingZoneTower::CreateTowerFasedeWallSegment(FVector WallCoordin
 		GetSenterCoordinate().Y * LevelSettings.CellSize, 0), &LevelSettings.BildingWallMaterial);
 }
 
-void FLevelGenBildingZoneTower::ConnectBildingToLevelCells(FDataStorage& DataStorage)
+void FLevelGenBildingZoneTower::ConnectBildingToLevelCells(FDataStorage& DataStorage_loc)
 {
 	for (int i = 0; i < (int)EDirection::end; i++)
 	{
@@ -2042,7 +2042,7 @@ void FLevelGenBildingZoneTower::ConnectBildingToLevelCells(FDataStorage& DataSto
 
 		for (auto CurrentCoordinate = WallCellsCoordinate.begin(); CurrentCoordinate != WallCellsCoordinate.end(); CurrentCoordinate++)
 		{
-			DataStorage.LevelMap.GetCell(*CurrentCoordinate)->LinkedBildingZone = this;
+			DataStorage_loc.LevelMap.GetCell(*CurrentCoordinate)->LinkedBildingZone = this;
 		}
 	}
 	
@@ -2050,8 +2050,8 @@ void FLevelGenBildingZoneTower::ConnectBildingToLevelCells(FDataStorage& DataSto
 	{
 		for (int j = Coordinate.Y; j < Coordinate.Y + Size.Y; j++)
 		{
-			DataStorage.LevelMap.GetCell(i, j)->CellInst = std::shared_ptr<FLevelCellBase>(ELevelCellTypeCreate(ELevelCellType::Tower, *DataStorage.LevelMap.GetCell(i, j)));
-			DataStorage.LevelMap.GetCell(i, j)->LinkedBildingZone = this;
+			DataStorage_loc.LevelMap.GetCell(i, j)->CellInst = std::shared_ptr<FLevelCellBase>(ELevelCellTypeCreate(ELevelCellType::Tower, *DataStorage_loc.LevelMap.GetCell(i, j)));
+			DataStorage_loc.LevelMap.GetCell(i, j)->LinkedBildingZone = this;
 		}
 	}
 

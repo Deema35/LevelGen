@@ -38,7 +38,7 @@ class FCarTrackGraphBase
 public:
 
 	FCarTrackGraphBase(const FLevelGeneratorSettings& _LevelSettings, const FDataStorage& _DataStorage) :
-		LevelSettings(_LevelSettings), RandomGenerator(time(0)), DataStorage(_DataStorage) {}
+		LevelSettings(_LevelSettings),  DataStorage(_DataStorage), RandomGenerator(time(0)) {}
 
 	virtual ~FCarTrackGraphBase() {}
 

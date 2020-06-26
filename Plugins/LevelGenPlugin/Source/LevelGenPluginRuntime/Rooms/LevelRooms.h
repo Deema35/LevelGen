@@ -33,7 +33,7 @@ struct FJointSlot
 
 	FJointSlot() = default;
 
-	FJointSlot(FVector _RelativeCoordinate, EDirection _Direction) : RelativeCoordinate(_RelativeCoordinate), Direction(_Direction) {}
+	FJointSlot(FVector _RelativeCoordinate, EDirection _Direction) : Direction(_Direction), RelativeCoordinate(_RelativeCoordinate)  {}
 
 	UPROPERTY(EditAnywhere)
 	EDirection Direction = EDirection::end;

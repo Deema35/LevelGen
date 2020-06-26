@@ -118,7 +118,7 @@ FCarTrackGraphBase* FCarTrackLink::GetNextTrack(int LayerNum) const
 
 FCarTrackNode::FCarTrackNode(EHoverCarTrackDirection _Direction, std::pair<FVector, FVector> FirstPoint, std::pair<FVector, FVector> SecondPoint, const FLevelGenRoadBase* _TrackRoadOwner,
 	const FLevelGeneratorSettings& LevelSettings, const FDataStorage& DataStorage)
-	: Direction(_Direction), FCarTrackGraphBase(LevelSettings, DataStorage), TrackRoadOwner(_TrackRoadOwner)
+	: FCarTrackGraphBase(LevelSettings, DataStorage), Direction(_Direction), TrackRoadOwner(_TrackRoadOwner)
 {
 
 	switch (Direction)

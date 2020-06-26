@@ -214,7 +214,7 @@ class UObjectsDisposer
 public:
 
 	UObjectsDisposer(std::pair<FVector2D, FVector2D> _SearchAreaRange, std::mt19937& _RandomGenerator, const FLevelGeneratorSettings& _LevelSettings) :
-		SearchAreaRange(_SearchAreaRange),  RandomGenerator(_RandomGenerator), LevelSettings(_LevelSettings)
+		LevelSettings(_LevelSettings), SearchAreaRange(_SearchAreaRange), RandomGenerator(_RandomGenerator)
 	{
 		if (SearchAreaRange.first.X > SearchAreaRange.second.X || SearchAreaRange.first.Y > SearchAreaRange.second.Y) throw FString("Bad search area");
 	}

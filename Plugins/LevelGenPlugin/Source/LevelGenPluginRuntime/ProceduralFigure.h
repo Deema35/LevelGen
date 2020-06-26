@@ -114,7 +114,7 @@ class FProceduralFigureBase
 
 
 public:
-	FProceduralFigureBase(UMaterialInterface* _Material, float _TextureCodfficent) : TextureCodfficent(_TextureCodfficent), Material(_Material) {}
+	FProceduralFigureBase(UMaterialInterface* _Material, float _TextureCodfficent) :  Material(_Material), TextureCodfficent(_TextureCodfficent) {}
 
 	virtual ~FProceduralFigureBase() {}
 

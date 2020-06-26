@@ -15,7 +15,7 @@ class LEVELGENPLUGINRUNTIME_API ULevelGenBordersShowComponentBace : public UProc
 
 public:
 
-	ULevelGenBordersShowComponentBace();
+	ULevelGenBordersShowComponentBace(const FObjectInitializer& ObjectInitializer);
 
 	~ULevelGenBordersShowComponentBace() {}
 

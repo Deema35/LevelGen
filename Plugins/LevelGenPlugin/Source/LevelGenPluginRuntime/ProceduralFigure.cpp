@@ -43,14 +43,14 @@ void FProceduralFigurBuffer::IniciateBufferForCurrentMaterial(const FLevelGenera
 //.........................................
 
 FCoordinateSystem2D::FCoordinateSystem2D(FVector _BeginCoordinate, FVector Normal, FVector Tangent) :
-	BeginCoordinate(_BeginCoordinate), N(Normal), i(Tangent)
+	BeginCoordinate(_BeginCoordinate),  i(Tangent), N(Normal)
 {
 
 	j = FVector::CrossProduct(i, N);
 	j = j / j.Size();
 }
 
-FCoordinateSystem2D::FCoordinateSystem2D(FVector FirstPoint, FVector2D FirstPoint2D, FVector Normal, FVector Tangent) : N(Normal), i(Tangent)
+FCoordinateSystem2D::FCoordinateSystem2D(FVector FirstPoint, FVector2D FirstPoint2D, FVector Normal, FVector Tangent) :  i(Tangent), N(Normal)
 {
 
 	j = FVector::CrossProduct(i, N);
@@ -129,11 +129,11 @@ void FProceduralFigureBase::Merge(FProceduralFigureBase& Figure, FVector Relatev
 
 			VertexOrder.push_back(&*Vertices.insert(NewVert).first);
 		}
-		else if (FCoordinateSystem2D* Coord2DLoc = GetCoord2DSysForPoint(VerticesBuf[i] + RelatevCoordinate))
+		else if (FCoordinateSystem2D* Coord2DLoc2 = GetCoord2DSysForPoint(VerticesBuf[i] + RelatevCoordinate))
 		{
 			FProceduralVertex NewVert(VerticesBuf[i] + RelatevCoordinate, NormalBuf[i], TangentBuf[i]);
 
-			NewVert.NotOwnUVCoordinate = std::make_pair(true, Coord2DLoc->Get2DCoordinateFrom3D(VerticesBuf[i] + RelatevCoordinate));
+			NewVert.NotOwnUVCoordinate = std::make_pair(true, Coord2DLoc2->Get2DCoordinateFrom3D(VerticesBuf[i] + RelatevCoordinate));
 
 			VertexOrder.push_back(&*Vertices.insert(NewVert).first);
 		}
@@ -180,12 +180,12 @@ void FProceduralFigureBase::CreateUVCoordinateForNewTriangles(TArray<uint32>& Tr
 			const FProceduralVertex* BasePoint = nullptr;
 
 
-			for (int i = 0; i < it.first->second.size(); i++)
+			for (int j = 0; j < it.first->second.size(); j++)
 			{
-				if (VertexOrder[it.first->second[i]]->NotOwnUVCoordinate.first)
+				if (VertexOrder[it.first->second[j]]->NotOwnUVCoordinate.first)
 				{
 
-					BasePoint = VertexOrder[it.first->second[i]];
+					BasePoint = VertexOrder[it.first->second[j]];
 					break;
 				}
 
@@ -203,12 +203,12 @@ void FProceduralFigureBase::CreateUVCoordinateForNewTriangles(TArray<uint32>& Tr
 			const FProceduralVertex* BasePoint = nullptr;
 
 
-			for (int i = 0; i < it.first->second.size(); i++)
+			for (int j = 0; j < it.first->second.size(); j++)
 			{
-				if (VertexOrder[it.first->second[i]]->NotOwnUVCoordinate.first)
+				if (VertexOrder[it.first->second[j]]->NotOwnUVCoordinate.first)
 				{
 
-					BasePoint = VertexOrder[it.first->second[i]];
+					BasePoint = VertexOrder[it.first->second[j]];
 					break;
 				}
 
@@ -469,14 +469,14 @@ void FProceduralFigureBase::AddTriangle(int Vertex_1, int Vertex_2, int Vertex_3
 FProceduralFigureTriangle::FProceduralFigureTriangle(FVector Coordinate1, FVector Coordinate2, FVector Coordinate3, FLevelGeneratorMaterialSettings Material, FVector Normal, FVector Tangent) :
 	FProceduralFigureBase(Material.Material, Material.MaterialCoefficient)
 {
-	std::shared_ptr<FCoordinateSystem2D> Coord2D(new FCoordinateSystem2D(Coordinate1, Normal, Tangent));
+	std::shared_ptr<FCoordinateSystem2D> Coord2D_loc(new FCoordinateSystem2D(Coordinate1, Normal, Tangent));
 	std::shared_ptr<FCoordinateSystem2D> Coord2DPerpendicular;
 	
-	AddCoordinateSystem(Coord2D);
+	AddCoordinateSystem(Coord2D_loc);
 
 	AddVertex(Coordinate1, FVector2D(0, 0), Normal, Tangent);
-	AddVertex(Coordinate2, Coord2D->Get2DCoordinateFrom3D(Coordinate2), Normal, Tangent);
-	AddVertex(Coordinate3, Coord2D->Get2DCoordinateFrom3D(Coordinate3), Normal, Tangent);
+	AddVertex(Coordinate2, Coord2D_loc->Get2DCoordinateFrom3D(Coordinate2), Normal, Tangent);
+	AddVertex(Coordinate3, Coord2D_loc->Get2DCoordinateFrom3D(Coordinate3), Normal, Tangent);
 
 
 	FVector Vec1 = Coordinate2 - Coordinate1;
@@ -500,22 +500,22 @@ FProceduralFigureRectangle::FProceduralFigureRectangle(FVector Coordinate_1, FVe
 	FVector Normal, FVector Tangent) :
 	FProceduralFigureBase(Material.Material, Material.MaterialCoefficient)
 {
-	std::shared_ptr<FCoordinateSystem2D> Coord2D(new FCoordinateSystem2D(Coordinate_1, Normal, Tangent));
+	std::shared_ptr<FCoordinateSystem2D> Coord2D_loc(new FCoordinateSystem2D(Coordinate_1, Normal, Tangent));
 	std::shared_ptr<FCoordinateSystem2D> Coord2DPerpendicular;
 	
-	AddCoordinateSystem(Coord2D);
+	AddCoordinateSystem(Coord2D_loc);
 	AddVertex(Coordinate_1, FVector2D(0, 0), Normal, Tangent);
-	AddVertex(Coordinate_2, Coord2D->Get2DCoordinateFrom3D(Coordinate_2), Normal, Tangent);
-	AddVertex(Coordinate_3, Coord2D->Get2DCoordinateFrom3D(Coordinate_3), Normal, Tangent);
+	AddVertex(Coordinate_2, Coord2D_loc->Get2DCoordinateFrom3D(Coordinate_2), Normal, Tangent);
+	AddVertex(Coordinate_3, Coord2D_loc->Get2DCoordinateFrom3D(Coordinate_3), Normal, Tangent);
 
 
-	if (Coord2D->IsPointOnPlane(Coordinate_4))
+	if (Coord2D_loc->IsPointOnPlane(Coordinate_4))
 	{
-		AddVertex(Coordinate_4, Coord2D->Get2DCoordinateFrom3D(Coordinate_4), Normal, Tangent);
+		AddVertex(Coordinate_4, Coord2D_loc->Get2DCoordinateFrom3D(Coordinate_4), Normal, Tangent);
 	}
 	else
 	{
-		std::shared_ptr<FCoordinateSystem2D> Coord2DNew(new FCoordinateSystem2D(Coordinate_2, Coord2D->Get2DCoordinateFrom3D(Coordinate_2), Normal, Tangent));
+		std::shared_ptr<FCoordinateSystem2D> Coord2DNew(new FCoordinateSystem2D(Coordinate_2, Coord2D_loc->Get2DCoordinateFrom3D(Coordinate_2), Normal, Tangent));
 
 		AddCoordinateSystem(Coord2DNew);
 		AddVertex(Coordinate_4, Coord2DNew->Get2DCoordinateFrom3D(Coordinate_4), Normal, Tangent);
@@ -531,17 +531,17 @@ FProceduralFigureRectangle::FProceduralFigureRectangle(FVector Point, FVector No
 	FProceduralFigureBase(Material.Material, Material.MaterialCoefficient)
 
 {
-	std::shared_ptr<FCoordinateSystem2D> Coord2D(new FCoordinateSystem2D(Point, Normal, i));
+	std::shared_ptr<FCoordinateSystem2D> Coord2D_loc(new FCoordinateSystem2D(Point, Normal, i));
 
 	FVector2D P1(-Size.X / 2, -Size.Y / 2);
 	FVector2D P2(Size.X / 2, -Size.Y / 2);
 	FVector2D P3(Size.X / 2, Size.Y / 2);
 	FVector2D P4(-Size.X / 2, Size.Y / 2);
 
-	FVector V1 = Coord2D->Get3DCoordinateFrom2D(P1);
-	FVector V2 = Coord2D->Get3DCoordinateFrom2D(P2);
-	FVector V3 = Coord2D->Get3DCoordinateFrom2D(P3);
-	FVector V4 = Coord2D->Get3DCoordinateFrom2D(P4);
+	FVector V1 = Coord2D_loc->Get3DCoordinateFrom2D(P1);
+	FVector V2 = Coord2D_loc->Get3DCoordinateFrom2D(P2);
+	FVector V3 = Coord2D_loc->Get3DCoordinateFrom2D(P3);
+	FVector V4 = Coord2D_loc->Get3DCoordinateFrom2D(P4);
 
 	
 	AddVertex(V1, P1, Normal, i);
@@ -549,7 +549,7 @@ FProceduralFigureRectangle::FProceduralFigureRectangle(FVector Point, FVector No
 	AddVertex(V3, P3, Normal, i);
 	AddVertex(V4, P4, Normal, i);
 
-	AddCoordinateSystem(Coord2D);
+	AddCoordinateSystem(Coord2D_loc);
 	
 
 	AddTriangle(0, 1, 2);

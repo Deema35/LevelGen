@@ -57,9 +57,9 @@ bool FLevelGeneratorSettings::operator== (const FLevelGeneratorSettings& right) 
 	
 	if (ComparateProperty<FLevelGeneratorSettings>(FLevelGeneratorSettings::StaticStruct(), *this, right))
 	{
-		for (TFieldIterator<UProperty> PropIt(FLevelGeneratorSettings::StaticStruct()); PropIt; ++PropIt)
+		for (TFieldIterator<FProperty> PropIt(FLevelGeneratorSettings::StaticStruct()); PropIt; ++PropIt)
 		{
-			if (UStructProperty* StructProp = Cast<UStructProperty>(*PropIt))
+			if (FStructProperty* StructProp = Cast<FStructProperty>(*PropIt))
 			{
 				
 				

@@ -28,7 +28,7 @@ struct FJointPart
 {
 public:
 	FJointPart(FVector _Coordinate, EDirection _Direction, FPlacedLevelRoomBase* _JoinRoom, FJoint* _OwnerJoint) :
-		Coordinate(_Coordinate), Direction(_Direction), JoinRoom(_JoinRoom), bBusy(_JoinRoom != nullptr), OwnerJoint(_OwnerJoint)
+		Coordinate(_Coordinate), JoinRoom(_JoinRoom), Direction(_Direction),  OwnerJoint(_OwnerJoint), bBusy(_JoinRoom != nullptr)
 	{ }
 	
 
@@ -138,7 +138,7 @@ class FSearchGraphNode : public FPlacedLevelRoomBase
 {
 public:
 	FSearchGraphNode(FLevelRoomLink* Room, FJointPart& JointPart, FVector StartCoordinate, std::weak_ptr<FSearchGraphNode> _LastNode)
-		: FPlacedLevelRoomBase(Room, StartCoordinate), LastNode(_LastNode), OutSlot(Room->GetOutSlotNum()), InSlot(Room->GetInSlotNum())
+		: FPlacedLevelRoomBase(Room, StartCoordinate), LastNode(_LastNode),  InSlot(Room->GetInSlotNum()), OutSlot(Room->GetOutSlotNum())
 	{
 		 
 		if (!JointPart.IsPartFitForSlot(*GetInPutJointSlot()))

@@ -7,7 +7,7 @@
 //ULevelGenBordersShowComponentBace
 //***************************************************
 
-ULevelGenBordersShowComponentBace::ULevelGenBordersShowComponentBace()
+ULevelGenBordersShowComponentBace::ULevelGenBordersShowComponentBace(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	bHiddenInGame = true;
 	bUseEditorCompositing = true;

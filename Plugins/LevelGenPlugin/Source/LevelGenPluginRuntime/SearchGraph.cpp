@@ -8,7 +8,7 @@ const FValidationResult FValidationResult::Zero(0, 0);
 
 
 USearchGraph::USearchGraph(FJointPart& In, FJointPart& Out, FDataStorage& _DataStorage, const ALevelGenerator& _LevelGenerator) :
-	DataStorage(_DataStorage), LevelGenerator(_LevelGenerator)
+	LevelGenerator(_LevelGenerator), DataStorage(_DataStorage)
 {
 	if (!DataStorage.LevelMap.IsCellExist(FVector2D(In.GetCoordinate())) || !DataStorage.LevelMap.GetCell(FVector2D(In.GetCoordinate()))->CellInst)
 	{
@@ -75,9 +75,9 @@ USearchGraph::USearchGraph(FJointPart& In, FJointPart& Out, FDataStorage& _DataS
 
 		CurrentNode->SetProcessed();
 
-		for (int i = 0; i < NewNods.size(); i++)
+		for (int j = 0; j < NewNods.size(); j++)
 		{
-			Graph.insert(NewNods[i]);
+			Graph.insert(NewNods[j]);
 		}
 
 		if (i++ > 200) throw FString("Cycle limit, very long link");

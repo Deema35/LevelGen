@@ -72,7 +72,7 @@ public:
 
 	FLevelGenRoadBase(int Size, bool _bIsMainRoad, FVector2D _RoadNumber, const TLevelMap2D<FLevelGenRoadBase>& _RoadsMap,
 		const FLevelGeneratorSettings& _LevelSettings, const ALevelGenerator& _LevelGenerator) :
-		RoadSize(Size), bIsMainRoad(_bIsMainRoad), RoadsMap(_RoadsMap), RoadNumber(_RoadNumber), LevelSettings(_LevelSettings), LevelGenerator(_LevelGenerator)
+		 RoadsMap(_RoadsMap),  LevelSettings(_LevelSettings),   LevelGenerator(_LevelGenerator), RoadSize(Size), bIsMainRoad(_bIsMainRoad), RoadNumber(_RoadNumber)
 	{}
 
 	virtual ~FLevelGenRoadBase() {}

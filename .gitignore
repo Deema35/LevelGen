@@ -57,3 +57,8 @@ Build/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+#Plugin directory
+Plugins/LevelGenPlugin/Intermediate/*
+Plugins/LevelGenPlugin/Binaries/*
+!Plugins/LevelGenPlugin/Binaries/Win64/*.dll

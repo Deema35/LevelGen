@@ -54,7 +54,7 @@ struct FLevelGraphNode : public FLevelGraphNodeBase
 {
 	FLevelGraphNode(bool InUpperLayer, std::pair<FVector2D, FVector2D>& _GeneratedArea, FDataStorage& DataStorage,
 		const FLevelGeneratorSettings& LevelSettings, const ALevelGenerator& LevelGenerator)
-		: GeneratedArea(_GeneratedArea), FLevelGraphNodeBase(InUpperLayer, DataStorage, LevelSettings, LevelGenerator) {}
+		: FLevelGraphNodeBase(InUpperLayer, DataStorage, LevelSettings, LevelGenerator), GeneratedArea(_GeneratedArea) {}
 
 	bool SetRoom(FVector2D SearchStart, std::pair<int, int> FloorsInterval);
 
